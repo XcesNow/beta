@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xces Restaurant Partner</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.section {
+  min-height: calc(100vh - 128px);
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.slide-menu {
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide-menu.open {
+  transform: translateX(0);
+}
+
+.overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: #0049ff;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* Responsive table styles */
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  table {
+    min-width: 650px;
+  }
+}
+
+/* Modal responsiveness */
+@media (max-height: 700px) {
+  #orderDetailsModal .bg-dark-100 {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* Improved form responsiveness */
+@media (max-width: 640px) {
+  input[type="time"] {
+    width: 100%;
+  }
+  
+  .flex-col > .space-y-2 > span {
+    margin: 8px 0;
+    display: block;
+    text-align: center;
+  }
+}
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0049ff',
+            dark: {
+              100: '#1a1a1a',
+              200: '#121212',
+              300: '#0a0a0a',
+            }
+          },
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-dark-200 text-white">
+  <!-- Overlay for side menu -->
+  <div class="overlay fixed inset-0 bg-black bg-opacity-50 z-30" id="overlay"></div>
+
+  <!-- Side Menu -->
+  <div class="slide-menu fixed top-0 left-0 h-full w-64 bg-dark-100 z-40 shadow-lg">
+    <div class="p-4 border-b border-gray-700">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-primary">Xces Partner</h2>
+        <button id="closeMenu" class="text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <nav class="mt-4">
+      <ul>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer" data-target="home">
+          <i class="fas fa-home mr-2"></i> Home
+        </li>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer" data-target="login">
+          <i class="fas fa-sign-in-alt mr-2"></i> Login
+        </li>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer" data-target="register">
+          <i class="fas fa-user-plus mr-2"></i> Register
+        </li>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer hidden" data-target="dashboard">
+          <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+        </li>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer hidden" data-target="menu-management">
+          <i class="fas fa-utensils mr-2"></i> Menu Management
+        </li>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer hidden" data-target="orders">
+          <i class="fas fa-shopping-bag mr-2"></i> Orders
+        </li>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer hidden" data-target="transaction-history">
+          <i class="fas fa-history mr-2"></i> Transaction History
+        </li>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer hidden" data-target="settings">
+          <i class="fas fa-cog mr-2"></i> Settings
+        </li>
+        <li class="side-menu-item px-4 py-2 hover:bg-dark-300 cursor-pointer" data-target="privacy-policy">
+          <i class="fas fa-shield-alt mr-2"></i> Privacy Policy
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Top Navbar -->
+  <header class="fixed top-0 left-0 right-0 bg-dark-100 shadow-md z-20">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <button id="menuToggle" class="text-gray-400 hover:text-white mr-4">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="text-xl font-bold text-primary">Xces Restaurant Partner</h1>
+        </div>
+        <div class="hidden md:flex items-center space-x-4">
+          <button id="loginBtn" class="px-4 py-2 rounded-md text-white hover:bg-dark-300 transition">Login</button>
+          <button id="registerBtn" class="px-4 py-2 rounded-md bg-primary hover:bg-blue-700 transition">Register</button>
+          <button id="logoutBtn" class="px-4 py-2 rounded-md text-white hover:bg-dark-300 transition hidden">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 pt-20 pb-20">
+    <!-- Home Section -->
+    <section id="home" class="section active">
+      <div class="py-12">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6">Grow Your Restaurant Business with Xces</h2>
+          <p class="text-lg md:text-xl text-gray-300 mb-8">Join thousands of restaurants that use Xces to increase their sales and reach more customers.</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <button id="getStartedBtn" class="px-6 py-3 rounded-md bg-primary hover:bg-blue-700 transition text-lg font-medium">Get Started</button>
+            <button class="px-6 py-3 rounded-md border border-gray-600 hover:bg-dark-300 transition text-lg font-medium">Learn More</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 my-16">
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-store text-primary"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Manage Your Restaurant</h3>
+          <p class="text-gray-400">Easily update your menu, prices, and availability in real-time.</p>
+        </div>
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-chart-line text-primary"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Increase Your Sales</h3>
+          <p class="text-gray-400">Reach more customers and boost your revenue with our platform.</p>
+        </div>
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-mobile-alt text-primary"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Seamless Experience</h3>
+          <p class="text-gray-400">Provide a smooth ordering experience for your customers.</p>
+        </div>
+      </div>
+
+      <div class="bg-dark-100 p-6 md:p-8 rounded-lg shadow-lg my-16">
+        <h2 class="text-2xl font-bold mb-6 text-center">Why Partner With Us?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 mr-4">
+              <div class="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
+                <i class="fas fa-globe text-primary"></i>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold mb-2">Expand Your Reach</h3>
+              <p class="text-gray-400">Connect with thousands of potential customers in your area.</p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <div class="flex-shrink-0 mr-4">
+              <div class="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
+                <i class="fas fa-bolt text-primary"></i>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold mb-2">Quick Onboarding</h3>
+              <p class="text-gray-400">Get started in minutes with our simple registration process.</p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <div class="flex-shrink-0 mr-4">
+              <div class="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
+                <i class="fas fa-chart-pie text-primary"></i>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold mb-2">Detailed Analytics</h3>
+              <p class="text-gray-400">Track your performance with comprehensive analytics and insights.</p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <div class="flex-shrink-0 mr-4">
+              <div class="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
+                <i class="fas fa-headset text-primary"></i>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold mb-2">24/7 Support</h3>
+              <p class="text-gray-400">Our dedicated support team is always ready to assist you.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login" class="section">
+      <div class="max-w-md mx-auto bg-dark-100 rounded-lg shadow-lg p-6 md:p-8 my-12">
+        <h2 class="text-2xl font-bold mb-6 text-center">Login to Your Account</h2>
+        <form id="loginForm">
+          <div class="mb-4">
+            <label for="loginEmail" class="block text-gray-300 mb-2">Email Address</label>
+            <input type="email" id="loginEmail" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+          </div>
+          <div class="mb-6">
+            <label for="loginPassword" class="block text-gray-300 mb-2">Password</label>
+            <input type="password" id="loginPassword" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-3 sm:space-y-0">
+            <div class="flex items-center">
+              <input type="checkbox" id="remember" class="mr-2">
+              <label for="remember" class="text-gray-300">Remember me</label>
+            </div>
+            <a href="#" class="text-primary hover:underline">Forgot password?</a>
+          </div>
+          <button type="submit" class="w-full px-4 py-2 bg-primary hover:bg-blue-700 rounded-md transition">Login</button>
+        </form>
+        <div class="mt-6 text-center">
+          <p class="text-gray-400">Don't have an account? <a href="#" id="goToRegister" class="text-primary hover:underline">Register now</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Register Section -->
+    <section id="register" class="section">
+      <div class="max-w-3xl mx-auto bg-dark-100 rounded-lg shadow-lg p-6 md:p-8 my-12">
+        <h2 class="text-2xl font-bold mb-6 text-center">Register Your Restaurant</h2>
+        
+        <div class="mb-8">
+          <div class="flex items-center mb-4">
+            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center mr-3">
+              <span class="font-bold">1</span>
+            </div>
+            <h3 class="text-xl font-semibold">Basic Restaurant Information</h3>
+          </div>
+          
+          <form id="registerForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label for="restaurantName" class="block text-gray-300 mb-2">Restaurant Name*</label>
+                <input type="text" id="restaurantName" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              </div>
+              <div>
+                <label for="ownerName" class="block text-gray-300 mb-2">Owner/Manager Name*</label>
+                <input type="text" id="ownerName" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              </div>
+              <div>
+                <label for="businessPhone" class="block text-gray-300 mb-2">Contact Number (Business)*</label>
+                <input type="tel" id="businessPhone" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              </div>
+              <div>
+                <label for="samePhone" class="flex items-center text-gray-300 mb-2">
+                  <input type="checkbox" id="samePhone" class="mr-2">
+                  Same number for customers
+                </label>
+                <input type="tel" id="customerPhone" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div class="md:col-span-2">
+                <label for="description" class="block text-gray-300 mb-2">Restaurant Description*</label>
+                <textarea id="description" rows="3" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required></textarea>
+              </div>
+              <div>
+                <label for="email" class="block text-gray-300 mb-2">Email Address*</label>
+                <input type="email" id="email" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              </div>
+              <div>
+                <label for="password" class="block text-gray-300 mb-2">Password*</label>
+                <input type="password" id="password" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              </div>
+            </div>
+
+            <div class="flex items-center mb-4 mt-8">
+              <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center mr-3">
+                <span class="font-bold">2</span>
+              </div>
+              <h3 class="text-xl font-semibold">Business Details</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label for="fssaiLicense" class="block text-gray-300 mb-2">FSSAI License No.*</label>
+                <input type="text" id="fssaiLicense" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              </div>
+              <div>
+                <label for="gstNumber" class="block text-gray-300 mb-2">GST Number (Optional)</label>
+                <input type="text" id="gstNumber" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="panNumber" class="block text-gray-300 mb-2">PAN Card Number (Optional)</label>
+                <input type="text" id="panNumber" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="businessType" class="block text-gray-300 mb-2">Business Type*</label>
+                <select id="businessType" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+                  <option value="">Select Business Type</option>
+                  <option value="restaurant">Restaurant</option>
+                  <option value="cafe">Café</option>
+                  <option value="cloudKitchen">Cloud Kitchen</option>
+                  <option value="bakery">Bakery</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="upiId" class="block text-gray-300 mb-2">UPI ID</label>
+                <input type="text" id="upiId" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="bankDetails" class="block text-gray-300 mb-2">Bank Account Details</label>
+                <input type="text" id="bankDetails" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Account Number / IFSC">
+              </div>
+            </div>
+
+            <div class="flex items-center mb-6">
+              <input type="checkbox" id="termsAgree" class="mr-2" required>
+              <label for="termsAgree" class="text-gray-300">I agree to the <a href="#" class="text-primary hover:underline">Terms and Conditions</a></label>
+            </div>
+
+            <button type="submit" class="w-full px-4 py-3 bg-primary hover:bg-blue-700 rounded-md transition font-medium">Register Restaurant</button>
+          </form>
+          
+          <div class="mt-6 text-center">
+            <p class="text-gray-400">Already have an account? <a href="#" id="goToLogin" class="text-primary hover:underline">Login now</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section">
+      <div class="py-8">
+        <h2 class="text-2xl font-bold mb-6">Restaurant Dashboard</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8">
+          <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold mb-2 text-gray-300">Today's Orders</h3>
+            <p class="text-3xl font-bold text-primary">0</p>
+          </div>
+          <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold mb-2 text-gray-300">Total Revenue</h3>
+            <p class="text-3xl font-bold text-primary">₹0</p>
+          </div>
+          <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold mb-2 text-gray-300">Menu Items</h3>
+            <p class="text-3xl font-bold text-primary">0</p>
+          </div>
+        </div>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold">Restaurant Status</h3>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div class="flex items-center justify-between p-4 bg-dark-300 rounded-md">
+              <div>
+                <h4 class="font-medium">Restaurant Open/Close</h4>
+                <p class="text-sm text-gray-400">Toggle to change your restaurant's availability</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="restaurantOpenToggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-dark-300 rounded-md">
+              <div>
+                <h4 class="font-medium">Rush Hour Mode</h4>
+                <p class="text-sm text-gray-400">Toggle if you're experiencing high order volume</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="rushHourToggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="p-4 mt-4 bg-yellow-900 bg-opacity-30 rounded-md text-yellow-400 hidden" id="rushHourNotice">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            <span>Rush Hour Mode: Customers will be notified that orders may take longer than usual.</span>
+          </div>
+          
+          <div class="p-4 mt-4 bg-red-900 bg-opacity-30 rounded-md text-red-400 hidden" id="closedNotice">
+            <i class="fas fa-store-slash mr-2"></i>
+            <span>Restaurant Closed: You won't receive any new orders until you reopen.</span>
+          </div>
+        </div>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold mb-4">Quick Actions</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <button class="p-4 bg-dark-300 hover:bg-dark-200 rounded-lg transition text-center nav-btn" data-target="menu-management">
+              <i class="fas fa-utensils text-primary text-2xl mb-2"></i>
+              <p>Manage Menu</p>
+            </button>
+            <button class="p-4 bg-dark-300 hover:bg-dark-200 rounded-lg transition text-center nav-btn" data-target="orders">
+              <i class="fas fa-shopping-bag text-primary text-2xl mb-2"></i>
+              <p>View Orders</p>
+            </button>
+            <button class="p-4 bg-dark-300 hover:bg-dark-200 rounded-lg transition text-center nav-btn" data-target="transaction-history">
+              <i class="fas fa-history text-primary text-2xl mb-2"></i>
+              <p>Transactions</p>
+            </button>
+            <button class="p-4 bg-dark-300 hover:bg-dark-200 rounded-lg transition text-center nav-btn" data-target="settings">
+              <i class="fas fa-cog text-primary text-2xl mb-2"></i>
+              <p>Settings</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Management Section -->
+    <section id="menu-management" class="section">
+      <div class="py-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+          <h2 class="text-2xl font-bold">Menu Management</h2>
+          <button id="addItemBtn" class="px-4 py-2 bg-primary hover:bg-blue-700 rounded-md transition">
+            <i class="fas fa-plus mr-2"></i> Add New Item
+          </button>
+        </div>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg mb-8">
+          <h3 class="text-xl font-semibold mb-4">Categories</h3>
+          <div class="flex flex-wrap gap-2 mb-4" id="categoryList">
+            <span class="px-3 py-1 bg-dark-300 rounded-full">No categories yet</span>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input type="text" id="newCategory" placeholder="Add new category" class="flex-grow px-4 py-2 bg-dark-300 border border-gray-700 rounded-md sm:rounded-l-md sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-primary">
+            <button id="addCategoryBtn" class="px-4 py-2 bg-primary hover:bg-blue-700 rounded-md sm:rounded-l-none sm:rounded-r-md transition">Add</button>
+          </div>
+        </div>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold mb-4">Menu Items</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="border-b border-gray-700">
+                  <th class="py-3 px-4 text-left">Item Name</th>
+                  <th class="py-3 px-4 text-left">Category</th>
+                  <th class="py-3 px-4 text-left">Price</th>
+                  <th class="py-3 px-4 text-left">Status</th>
+                  <th class="py-3 px-4 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="menuItemsList">
+                <tr>
+                  <td colspan="5" class="py-4 px-4 text-center text-gray-400">No menu items added yet</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Add Item Modal -->
+      <div id="addItemModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-4">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold">Add New Menu Item</h3>
+            <button id="closeItemModal" class="text-gray-400 hover:text-white">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <form id="addItemForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label for="itemName" class="block text-gray-300 mb-2">Item Name*</label>
+                <input type="text" id="itemName" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              </div>
+              <div>
+                <label for="itemCategory" class="block text-gray-300 mb-2">Category*</label>
+                <select id="itemCategory" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+                  <option value="">Select Category</option>
+                </select>
+              </div>
+              <div>
+                <label for="itemPrice" class="block text-gray-300 mb-2">Price (₹)*</label>
+                <input type="number" id="itemPrice" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              </div>
+              <div>
+                <label for="itemImage" class="block text-gray-300 mb-2">Image URL</label>
+                <input type="url" id="itemImage" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="https://example.com/image.jpg">
+              </div>
+              <div class="md:col-span-2">
+                <label for="itemDescription" class="block text-gray-300 mb-2">Description</label>
+                <textarea id="itemDescription" rows="2" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+              </div>
+              <div>
+                <label for="itemCalories" class="block text-gray-300 mb-2">Calories</label>
+                <input type="number" id="itemCalories" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="itemAllergens" class="block text-gray-300 mb-2">Allergens</label>
+                <input type="text" id="itemAllergens" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="e.g., nuts, dairy, gluten">
+              </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row sm:justify-end mt-6 gap-3">
+              <button type="button" id="cancelItemBtn" class="px-4 py-2 border border-gray-600 hover:bg-dark-300 rounded-md transition">Cancel</button>
+              <button type="submit" class="px-4 py-2 bg-primary hover:bg-blue-700 rounded-md transition">Add Item</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section id="orders" class="section">
+      <div class="py-8">
+        <h2 class="text-2xl font-bold mb-6">Order Management</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold mb-4 text-gray-300">New Orders</h3>
+            <div id="newOrdersList" class="space-y-4">
+              <div class="text-center py-4 text-gray-400">
+                <p>No new orders</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold mb-4 text-gray-300">Preparing</h3>
+            <div id="preparingOrdersList" class="space-y-4">
+              <div class="text-center py-4 text-gray-400">
+                <p>No orders in preparation</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold mb-4 text-gray-300">Ready for Pickup</h3>
+            <div id="readyOrdersList" class="space-y-4">
+              <div class="text-center py-4 text-gray-400">
+                <p>No orders ready for pickup</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+            <h3 class="text-xl font-semibold">All Orders</h3>
+            <div>
+              <select id="orderFilter" class="w-full sm:w-auto px-3 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="all">All Orders</option>
+                <option value="new">New</option>
+                <option value="preparing">Preparing</option>
+                <option value="ready">Ready for Pickup</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="border-b border-gray-700">
+                  <th class="py-3 px-4 text-left">Order ID</th>
+                  <th class="py-3 px-4 text-left">Customer</th>
+                  <th class="py-3 px-4 text-left">Items</th>
+                  <th class="py-3 px-4 text-left">Total</th>
+                  <th class="py-3 px-4 text-left">Status</th>
+                  <th class="py-3 px-4 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="allOrdersList">
+                <tr>
+                  <td colspan="6" class="py-4 px-4 text-center text-gray-400">No orders yet</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Order Details Modal -->
+      <div id="orderDetailsModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg w-full max-w-2xl mx-4 my-8 overflow-y-auto max-h-[90vh]">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold">Order Details</h3>
+            <button id="closeOrderModal" class="text-gray-400 hover:text-white">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div id="orderDetailsContent">
+            <!-- Order details will be populated here -->
+          </div>
+          
+          <div class="flex justify-end mt-6">
+            <button id="closeOrderDetailsBtn" class="px-4 py-2 border border-gray-600 hover:bg-dark-300 rounded-md transition">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transaction History Section -->
+    <section id="transaction-history" class="section">
+      <div class="py-8">
+        <h2 class="text-2xl font-bold mb-6">Transaction History</h2>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg mb-8">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+            <h3 class="text-xl font-semibold">Summary</h3>
+            <div>
+              <select id="transactionPeriod" class="w-full sm:w-auto px-3 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month" selected>This Month</option>
+                <option value="year">This Year</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            <div class="bg-dark-300 p-4 rounded-lg">
+              <h4 class="text-gray-400 mb-1">Total Revenue</h4>
+              <p class="text-2xl font-bold text-primary">₹0</p>
+            </div>
+            <div class="bg-dark-300 p-4 rounded-lg">
+              <h4 class="text-gray-400 mb-1">Orders Completed</h4>
+              <p class="text-2xl font-bold text-primary">0</p>
+            </div>
+            <div class="bg-dark-300 p-4 rounded-lg">
+              <h4 class="text-gray-400 mb-1">Average Order Value</h4>
+              <p class="text-2xl font-bold text-primary">₹0</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+            <h3 class="text-xl font-semibold">Transaction List</h3>
+            <div>
+              <select id="transactionFilter" class="w-full sm:w-auto px-3 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="all">All Transactions</option>
+                <option value="completed">Completed</option>
+                <option value="refunded">Refunded</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="border-b border-gray-700">
+                  <th class="py-3 px-4 text-left">Transaction ID</th>
+                  <th class="py-3 px-4 text-left">Order ID</th>
+                  <th class="py-3 px-4 text-left">Date</th>
+                  <th class="py-3 px-4 text-left">Amount</th>
+                  <th class="py-3 px-4 text-left">Payment Method</th>
+                  <th class="py-3 px-4 text-left">Status</th>
+                </tr>
+              </thead>
+              <tbody id="transactionsList">
+                <tr>
+                  <td colspan="6" class="py-4 px-4 text-center text-gray-400">No transactions yet</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings Section -->
+    <section id="settings" class="section">
+      <div class="py-8">
+        <h2 class="text-2xl font-bold mb-6">Restaurant Settings</h2>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg mb-8">
+          <h3 class="text-xl font-semibold mb-4">Restaurant Profile</h3>
+          <form id="profileForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label for="settingsName" class="block text-gray-300 mb-2">Restaurant Name</label>
+                <input type="text" id="settingsName" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="settingsOwner" class="block text-gray-300 mb-2">Owner/Manager Name</label>
+                <input type="text" id="settingsOwner" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="settingsPhone" class="block text-gray-300 mb-2">Business Phone</label>
+                <input type="tel" id="settingsPhone" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="settingsCustomerPhone" class="block text-gray-300 mb-2">Customer Phone</label>
+                <input type="tel" id="settingsCustomerPhone" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div class="md:col-span-2">
+                <label for="settingsDescription" class="block text-gray-300 mb-2">Restaurant Description</label>
+                <textarea id="settingsDescription" rows="3" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+              </div>
+            </div>
+            
+            <button type="submit" class="px-4 py-2 bg-primary hover:bg-blue-700 rounded-md transition">Save Changes</button>
+          </form>
+        </div>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg mb-8">
+          <h3 class="text-xl font-semibold mb-4">Business Hours</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-300 mb-2">Monday</label>
+              <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <span class="flex items-center justify-center">to</span>
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+            <div>
+              <label class="block text-gray-300 mb-2">Tuesday</label>
+              <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <span class="flex items-center justify-center">to</span>
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+            <div>
+              <label class="block text-gray-300 mb-2">Wednesday</label>
+              <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <span class="flex items-center justify-center">to</span>
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+            <div>
+              <label class="block text-gray-300 mb-2">Thursday</label>
+              <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <span class="flex items-center justify-center">to</span>
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+            <div>
+              <label class="block text-gray-300 mb-2">Friday</label>
+              <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <span class="flex items-center justify-center">to</span>
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+            <div>
+              <label class="block text-gray-300 mb-2">Saturday</label>
+              <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <span class="flex items-center justify-center">to</span>
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+            <div>
+              <label class="block text-gray-300 mb-2">Sunday</label>
+              <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <span class="flex items-center justify-center">to</span>
+                <input type="time" class="flex-1 px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+          </div>
+          <button class="mt-4 px-4 py-2 bg-primary hover:bg-blue-700 rounded-md transition">Save Hours</button>
+        </div>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold mb-4">Account Settings</h3>
+          <div class="space-y-4">
+            <button class="w-full px-4 py-2 bg-dark-300 hover:bg-dark-200 rounded-md transition text-left">
+              <i class="fas fa-lock mr-2 text-primary"></i> Change Password
+            </button>
+            <button class="w-full px-4 py-2 bg-dark-300 hover:bg-dark-200 rounded-md transition text-left">
+              <i class="fas fa-bell mr-2 text-primary"></i> Notification Settings
+            </button>
+            <button id="logoutBtnSettings" class="w-full px-4 py-2 bg-red-900 hover:bg-red-800 rounded-md transition text-left">
+              <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Policy Section -->
+    <section id="privacy-policy" class="section">
+      <div class="py-8">
+        <h2 class="text-2xl font-bold mb-6">Privacy Policy</h2>
+        
+        <div class="bg-dark-100 p-6 rounded-lg shadow-lg">
+          <div class="prose prose-invert max-w-none">
+            <h3 class="text-xl font-semibold mb-4">Xces Restaurant Partner Privacy Policy</h3>
+            <p class="mb-4">Last Updated: May 1, 2023</p>
+            
+            <h4 class="text-lg font-semibold mt-6 mb-3">1. Introduction</h4>
+            <p class="mb-4">
+              Welcome to Xces Restaurant Partner ("we," "our," or "us"). We are committed to protecting your privacy and the information you share with us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
+            </p>
+            
+            <h4 class="text-lg font-semibold mt-6 mb-3">2. Information We Collect</h4>
+            <p class="mb-2">We collect the following types of information:</p>
+            <ul class="list-disc pl-6 mb-4">
+              <li class="mb-2">
+                <strong>Restaurant Information:</strong> Name, address, contact details, business registration numbers, and other information necessary to set up and manage your restaurant profile.
+              </li>
+              <li class="mb-2">
+                <strong>Financial Information:</strong> Bank account details, UPI IDs, and transaction history for payment processing.
+              </li>
+              <li class="mb-2">
+                <strong>Menu Information:</strong> Details about your food items, prices, and availability.
+              </li>
+              <li class="mb-2">
+                <strong>Usage Information:</strong> How you interact with our platform, including orders received, response times, and customer interactions.
+              </li>
+            </ul>
+            
+            <h4 class="text-lg font-semibold mt-6 mb-3">3. How We Use Your Information</h4>
+            <p class="mb-2">We use your information for the following purposes:</p>
+            <ul class="list-disc pl-6 mb-4">
+              <li class="mb-2">To provide and maintain our services</li>
+              <li class="mb-2">To process and manage orders</li>
+              <li class="mb-2">To facilitate payments between you and customers</li>
+              <li class="mb-2">To improve our platform and services</li>
+              <li class="mb-2">To communicate with you about your account and updates</li>
+              <li class="mb-2">To comply with legal obligations</li>
+            </ul>
+            
+            <h4 class="text-lg font-semibold mt-6 mb-3">4. Data Security</h4>
+            <p class="mb-4">
+              We implement appropriate security measures to protect your information from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure, and we cannot guarantee absolute security.
+            </p>
+            
+            <h4 class="text-lg font-semibold mt-6 mb-3">5. Data Sharing and Disclosure</h4>
+            <p class="mb-2">We may share your information with:</p>
+            <ul class="list-disc pl-6 mb-4">
+              <li class="mb-2">Customers who place orders from your restaurant</li>
+              <li class="mb-2">Payment processors to facilitate transactions</li>
+              <li class="mb-2">Service providers who help us operate our platform</li>
+              <li class="mb-2">Legal authorities when required by law</li>
+            </ul>
+            
+            <h4 class="text-lg font-semibold mt-6 mb-3">6. Your Rights</h4>
+            <p class="mb-2">You have the right to:</p>
+            <ul class="list-disc pl-6 mb-4">
+              <li class="mb-2">Access the personal information we hold about you</li>
+              <li class="mb-2">Correct inaccurate or incomplete information</li>
+              <li class="mb-2">Delete your personal information (subject to certain exceptions)</li>
+              <li class="mb-2">Object to or restrict the processing of your information</li>
+              <li class="mb-2">Data portability</li>
+            </ul>
+            
+            <h4 class="text-lg font-semibold mt-6 mb-3">7. Changes to This Privacy Policy</h4>
+            <p class="mb-4">
+              We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.
+            </p>
+            
+            <h4 class="text-lg font-semibold mt-6 mb-3">8. Contact Us</h4>
+            <p class="mb-4">
+              If you have any questions about this Privacy Policy, please contact us at:
+              <br>
+              Email: privacy@xces.com
+              <br>
+              Phone: +91 1234567890
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Navbar -->
+  <footer class="fixed bottom-0 left-0 right-0 bg-dark-100 shadow-md z-20 md:hidden">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center justify-around w-full">
+          <button class="flex flex-col items-center text-gray-400 hover:text-primary nav-btn" data-target="dashboard">
+            <i class="fas fa-tachometer-alt text-lg"></i>
+            <span class="text-xs mt-1">Dashboard</span>
+          </button>
+          <button class="flex flex-col items-center text-gray-400 hover:text-primary nav-btn" data-target="orders">
+            <i class="fas fa-shopping-bag text-lg"></i>
+            <span class="text-xs mt-1">Orders</span>
+          </button>
+          <button class="flex flex-col items-center text-gray-400 hover:text-primary nav-btn" data-target="menu-management">
+            <i class="fas fa-utensils text-lg"></i>
+            <span class="text-xs mt-1">Menu</span>
+          </button>
+          <button class="flex flex-col items-center text-gray-400 hover:text-primary nav-btn" data-target="transaction-history">
+            <i class="fas fa-history text-lg"></i>
+            <span class="text-xs mt-1">Transactions</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-analytics.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBUnPYUmLQJmE3Kul8cZAV_9BnILQ-oH5E",
+  authDomain: "xecsbeta.firebaseapp.com",
+  projectId: "xecsbeta",
+  storageBucket: "xecsbeta.firebasestorage.app",
+  messagingSenderId: "640298999637",
+  appId: "1:640298999637:web:8d84db5ea7a9f2be52d9dc",
+  measurementId: "G-DCY2JW3D4N"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// DOM Elements
+const sections = document.querySelectorAll('.section');
+const sideMenuItems = document.querySelectorAll('.side-menu-item');
+const navBtns = document.querySelectorAll('.nav-btn');
+const menuToggle = document.getElementById('menuToggle');
+const closeMenuBtn = document.getElementById('closeMenu');
+const slideMenu = document.querySelector('.slide-menu');
+const overlay = document.getElementById('overlay');
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const logoutBtnSettings = document.getElementById('logoutBtnSettings');
+const goToLogin = document.getElementById('goToLogin');
+const goToRegister = document.getElementById('goToRegister');
+const getStartedBtn = document.getElementById('getStartedBtn');
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+const samePhone = document.getElementById('samePhone');
+const customerPhone = document.getElementById('customerPhone');
+const restaurantOpenToggle = document.getElementById('restaurantOpenToggle');
+const rushHourToggle = document.getElementById('rushHourToggle');
+const rushHourNotice = document.getElementById('rushHourNotice');
+const closedNotice = document.getElementById('closedNotice');
+const addItemBtn = document.getElementById('addItemBtn');
+const addItemModal = document.getElementById('addItemModal');
+const closeItemModal = document.getElementById('closeItemModal');
+const cancelItemBtn = document.getElementById('cancelItemBtn');
+const addItemForm = document.getElementById('addItemForm');
+const addCategoryBtn = document.getElementById('addCategoryBtn');
+const newCategory = document.getElementById('newCategory');
+const categoryList = document.getElementById('categoryList');
+const itemCategory = document.getElementById('itemCategory');
+const menuItemsList = document.getElementById('menuItemsList');
+const profileForm = document.getElementById('profileForm');
+const orderDetailsModal = document.getElementById('orderDetailsModal');
+const closeOrderModal = document.getElementById('closeOrderModal');
+const closeOrderDetailsBtn = document.getElementById('closeOrderDetailsBtn');
+const orderDetailsContent = document.getElementById('orderDetailsContent');
+const newOrdersList = document.getElementById('newOrdersList');
+const preparingOrdersList = document.getElementById('preparingOrdersList');
+const readyOrdersList = document.getElementById('readyOrdersList');
+const allOrdersList = document.getElementById('allOrdersList');
+const transactionsList = document.getElementById('transactionsList');
+
+// Global variables
+let currentUser = null;
+let categories = [];
+let menuItems = [];
+let orders = [];
+let transactions = [];
+
+// Navigation Functions
+function showSection(sectionId) {
+  sections.forEach(section => {
+    section.classList.remove('active');
+  });
+  document.getElementById(sectionId).classList.add('active');
+  closeMenuSidebar();
+}
+
+function toggleMenu() {
+  slideMenu.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+
+function closeMenuSidebar() {
+  slideMenu.classList.remove('open');
+  overlay.classList.remove('open');
+}
+
+// Auth State Change Listener
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in
+    currentUser = user;
+    
+    // Update UI for logged in user
+    loginBtn.classList.add('hidden');
+    registerBtn.classList.add('hidden');
+    logoutBtn.classList.remove('hidden');
+    
+    // Show dashboard menu items
+    document.querySelectorAll('.side-menu-item.hidden').forEach(item => {
+      item.classList.remove('hidden');
+    });
+    
+    // Load user data
+    loadRestaurantData(user.uid);
+    
+    // Show dashboard
+    showSection('dashboard');
+  } else {
+    // User is signed out
+    currentUser = null;
+    
+    // Update UI for logged out user
+    loginBtn.classList.remove('hidden');
+    registerBtn.classList.remove('hidden');
+    logoutBtn.classList.add('hidden');
+    
+    // Hide dashboard menu items
+    document.querySelectorAll('.side-menu-item').forEach(item => {
+      if (item.dataset.target !== 'home' && item.dataset.target !== 'login' && item.dataset.target !== 'register' && item.dataset.target !== 'privacy-policy') {
+        item.classList.add('hidden');
+      }
+    });
+    
+    // Show home
+    showSection('home');
+  }
+});
+
+// Load Restaurant Data
+async function loadRestaurantData(userId) {
+  try {
+    const restaurantDoc = await getDoc(doc(db, "restaurants", userId));
+    
+    if (restaurantDoc.exists()) {
+      const data = restaurantDoc.data();
+      
+      // Populate settings form
+      if (profileForm) {
+        document.getElementById('settingsName').value = data.name || '';
+        document.getElementById('settingsOwner').value = data.ownerName || '';
+        document.getElementById('settingsPhone').value = data.businessPhone || '';
+        document.getElementById('settingsCustomerPhone').value = data.customerPhone || '';
+        document.getElementById('settingsDescription').value = data.description || '';
+      }
+      
+      // Set restaurant status toggles
+      if (restaurantOpenToggle) {
+        restaurantOpenToggle.checked = data.status !== 'closed';
+        updateRestaurantOpenStatus(data.status !== 'closed');
+      }
+      
+      if (rushHourToggle) {
+        rushHourToggle.checked = data.status === 'rush';
+        updateRushHourStatus(data.status === 'rush');
+      }
+      
+      // Load categories
+      loadCategories(userId);
+      
+      // Load menu items
+      loadMenuItems(userId);
+      
+      // Load orders
+      loadOrders(userId);
+      
+      // Load transactions
+      loadTransactions(userId);
+    }
+  } catch (error) {
+    console.error("Error loading restaurant data:", error);
+  }
+}
+
+// Restaurant Status Functions
+function updateRestaurantOpenStatus(isOpen) {
+  if (closedNotice) {
+    if (!isOpen) {
+      closedNotice.classList.remove('hidden');
+    } else {
+      closedNotice.classList.add('hidden');
+    }
+  }
+  
+  // Update in database
+  if (currentUser) {
+    const status = isOpen ? (rushHourToggle && rushHourToggle.checked ? 'rush' : 'open') : 'closed';
+    updateDoc(doc(db, "restaurants", currentUser.uid), { status });
+  }
+}
+
+function updateRushHourStatus(isRushHour) {
+  if (rushHourNotice) {
+    if (isRushHour) {
+      rushHourNotice.classList.remove('hidden');
+    } else {
+      rushHourNotice.classList.add('hidden');
+    }
+  }
+  
+  // Update in database
+  if (currentUser && restaurantOpenToggle && restaurantOpenToggle.checked) {
+    const status = isRushHour ? 'rush' : 'open';
+    updateDoc(doc(db, "restaurants", currentUser.uid), { status });
+  }
+}
+
+// Load Categories
+async function loadCategories(userId) {
+  try {
+    const categoriesSnapshot = await getDocs(collection(db, "restaurants", userId, "categories"));
+    categories = [];
+    
+    if (!categoriesSnapshot.empty) {
+      categoriesSnapshot.forEach((doc) => {
+        categories.push({
+          id: doc.id,
+          name: doc.data().name
+        });
+      });
+      
+      // Update category list
+      updateCategoryList();
+      
+      // Update category dropdown in add item form
+      updateCategoryDropdown();
+    } else {
+      if (categoryList) {
+        categoryList.innerHTML = '<span class="px-3 py-1 bg-dark-300 rounded-full">No categories yet</span>';
+      }
+      if (itemCategory) {
+        itemCategory.innerHTML = '<option value="">Select Category</option>';
+      }
+    }
+  } catch (error) {
+    console.error("Error loading categories:", error);
+  }
+}
+
+// Update Category List
+function updateCategoryList() {
+  if (!categoryList) return;
+  
+  if (categories.length > 0) {
+    categoryList.innerHTML = '';
+    categories.forEach(category => {
+      const categoryElement = document.createElement('div');
+      categoryElement.className = 'px-3 py-1 bg-dark-300 rounded-full flex items-center';
+      categoryElement.innerHTML = `
+        <span>${category.name}</span>
+        <button class="ml-2 text-gray-400 hover:text-white delete-category" data-id="${category.id}">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      categoryList.appendChild(categoryElement);
+    });
+    
+    // Add delete event listeners
+    document.querySelectorAll('.delete-category').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const categoryId = e.currentTarget.dataset.id;
+        await deleteCategory(categoryId);
+      });
+    });
+  } else {
+    categoryList.innerHTML = '<span class="px-3 py-1 bg-dark-300 rounded-full">No categories yet</span>';
+  }
+}
+
+// Update Category Dropdown
+function updateCategoryDropdown() {
+  if (!itemCategory) return;
+  
+  itemCategory.innerHTML = '<option value="">Select Category</option>';
+  categories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category.id;
+    option.textContent = category.name;
+    itemCategory.appendChild(option);
+  });
+}
+
+// Add Category
+async function addCategory(name) {
+  if (!currentUser) return;
+  
+  try {
+    const categoryRef = await addDoc(collection(db, "restaurants", currentUser.uid, "categories"), {
+      name: name,
+      createdAt: Timestamp.now()
+    });
+    
+    // Reload categories
+    loadCategories(currentUser.uid);
+    
+    // Clear input
+    if (newCategory) {
+      newCategory.value = '';
+    }
+  } catch (error) {
+    console.error("Error adding category:", error);
+  }
+}
+
+// Delete Category
+async function deleteCategory(categoryId) {
+  if (!currentUser) return;
+  
+  try {
+    await deleteDoc(doc(db, "restaurants", currentUser.uid, "categories", categoryId));
+    
+    // Reload categories
+    loadCategories(currentUser.uid);
+  } catch (error) {
+    console.error("Error deleting category:", error);
+  }
+}
+
+// Load Menu Items
+async function loadMenuItems(userId) {
+  try {
+    const menuItemsSnapshot = await getDocs(collection(db, "restaurants", userId, "menuItems"));
+    menuItems = [];
+    
+    if (!menuItemsSnapshot.empty) {
+      menuItemsSnapshot.forEach((doc) => {
+        menuItems.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      // Update menu items list
+      updateMenuItemsList();
+    } else {
+      if (menuItemsList) {
+        menuItemsList.innerHTML = '<tr><td colspan="5" class="py-4 px-4 text-center text-gray-400">No menu items added yet</td></tr>';
+      }
+    }
+  } catch (error) {
+    console.error("Error loading menu items:", error);
+  }
+}
+
+// Update Menu Items List
+function updateMenuItemsList() {
+  if (!menuItemsList) return;
+  
+  if (menuItems.length > 0) {
+    menuItemsList.innerHTML = '';
+    menuItems.forEach(item => {
+      const category = categories.find(c => c.id === item.categoryId);
+      const row = document.createElement('tr');
+      row.className = 'border-b border-gray-700';
+      row.innerHTML = `
+        <td class="py-3 px-4">
+          <div class="flex items-center">
+            ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.name}" class="w-10 h-10 rounded-md object-cover mr-3">` : ''}
+            <div>
+              <p class="font-medium">${item.name}</p>
+              <p class="text-sm text-gray-400">${item.description || ''}</p>
+            </div>
+          </div>
+        </td>
+        <td class="py-3 px-4">${category ? category.name : 'Uncategorized'}</td>
+        <td class="py-3 px-4">₹${item.price}</td>
+        <td class="py-3 px-4">
+          <span class="px-2 py-1 bg-green-900 text-green-300 rounded-full text-xs">Available</span>
+        </td>
+        <td class="py-3 px-4">
+          <button class="text-gray-400 hover:text-white mr-2 edit-item" data-id="${item.id}">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="text-gray-400 hover:text-white delete-item" data-id="${item.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      `;
+      menuItemsList.appendChild(row);
+    });
+    
+    // Add edit event listeners
+    document.querySelectorAll('.edit-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const itemId = e.currentTarget.dataset.id;
+        editMenuItem(itemId);
+      });
+    });
+    
+    // Add delete event listeners
+    document.querySelectorAll('.delete-item').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const itemId = e.currentTarget.dataset.id;
+        if (confirm("Are you sure you want to delete this item?")) {
+          await deleteMenuItem(itemId);
+        }
+      });
+    });
+  } else {
+    menuItemsList.innerHTML = '<tr><td colspan="5" class="py-4 px-4 text-center text-gray-400">No menu items added yet</td></tr>';
+  }
+}
+
+// Add Menu Item
+async function addMenuItem(itemData) {
+  if (!currentUser) return;
+  
+  try {
+    const menuItemRef = await addDoc(collection(db, "restaurants", currentUser.uid, "menuItems"), {
+      ...itemData,
+      createdAt: Timestamp.now()
+    });
+    
+    // Reload menu items
+    loadMenuItems(currentUser.uid);
+    
+    // Close modal
+    if (addItemModal) {
+      addItemModal.classList.add('hidden');
+    }
+    
+    // Reset form
+    if (addItemForm) {
+      addItemForm.reset();
+      addItemForm.dataset.mode = 'add';
+      delete addItemForm.dataset.itemId;
+    }
+  } catch (error) {
+    console.error("Error adding menu item:", error);
+  }
+}
+
+// Edit Menu Item
+function editMenuItem(itemId) {
+  const item = menuItems.find(i => i.id === itemId);
+  if (!item || !addItemForm) return;
+  
+  // Populate form
+  document.getElementById('itemName').value = item.name || '';
+  document.getElementById('itemCategory').value = item.categoryId || '';
+  document.getElementById('itemPrice').value = item.price || '';
+  document.getElementById('itemImage').value = item.imageUrl || '';
+  document.getElementById('itemDescription').value = item.description || '';
+  document.getElementById('itemCalories').value = item.calories || '';
+  document.getElementById('itemAllergens').value = item.allergens || '';
+  
+  // Change form submit handler to update instead of add
+  addItemForm.dataset.mode = 'edit';
+  addItemForm.dataset.itemId = itemId;
+  
+  // Show modal
+  if (addItemModal) {
+    addItemModal.classList.remove('hidden');
+  }
+}
+
+// Update Menu Item
+async function updateMenuItem(itemId, itemData) {
+  if (!currentUser) return;
+  
+  try {
+    await updateDoc(doc(db, "restaurants", currentUser.uid, "menuItems", itemId), {
+      ...itemData,
+      updatedAt: Timestamp.now()
+    });
+    
+    // Reload menu items
+    loadMenuItems(currentUser.uid);
+    
+    // Close modal
+    if (addItemModal) {
+      addItemModal.classList.add('hidden');
+    }
+    
+    // Reset form
+    if (addItemForm) {
+      addItemForm.reset();
+      addItemForm.dataset.mode = 'add';
+      delete addItemForm.dataset.itemId;
+    }
+  } catch (error) {
+    console.error("Error updating menu item:", error);
+  }
+}
+
+// Delete Menu Item
+async function deleteMenuItem(itemId) {
+  if (!currentUser) return;
+  
+  try {
+    await deleteDoc(doc(db, "restaurants", currentUser.uid, "menuItems", itemId));
+    
+    // Reload menu items
+    loadMenuItems(currentUser.uid);
+  } catch (error) {
+    console.error("Error deleting menu item:", error);
+  }
+}
+
+// Load Orders
+async function loadOrders(userId) {
+  try {
+    const ordersSnapshot = await getDocs(
+      query(collection(db, "restaurants", userId, "orders"), orderBy("createdAt", "desc"))
+    );
+    
+    orders = [];
+    
+    if (!ordersSnapshot.empty) {
+      ordersSnapshot.forEach((doc) => {
+        orders.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      // Update orders lists
+      updateOrdersLists();
+    } else {
+      resetOrdersLists();
+    }
+  } catch (error) {
+    console.error("Error loading orders:", error);
+    resetOrdersLists();
+  }
+}
+
+// Update Orders Lists
+function updateOrdersLists() {
+  // Reset lists
+  resetOrdersLists();
+  
+  if (orders.length === 0) return;
+  
+  // Filter orders by status
+  const newOrders = orders.filter(order => order.status === 'new');
+  const preparingOrders = orders.filter(order => order.status === 'preparing');
+  const readyOrders = orders.filter(order => order.status === 'ready');
+  
+  // Update new orders list
+  if (newOrdersList) {
+    if (newOrders.length > 0) {
+      newOrdersList.innerHTML = '';
+      newOrders.forEach(order => {
+        const orderElement = createOrderCard(order, [
+          { action: 'accept', label: 'Accept Order', icon: 'check', class: 'bg-green-700 hover:bg-green-800' },
+          { action: 'reject', label: 'Reject Order', icon: 'times', class: 'bg-red-700 hover:bg-red-800' }
+        ]);
+        newOrdersList.appendChild(orderElement);
+      });
+    }
+  }
+  
+  // Update preparing orders list
+  if (preparingOrdersList) {
+    if (preparingOrders.length > 0) {
+      preparingOrdersList.innerHTML = '';
+      preparingOrders.forEach(order => {
+        const orderElement = createOrderCard(order, [
+          { action: 'ready', label: 'Ready for Pickup', icon: 'check-circle', class: 'bg-primary hover:bg-blue-700' }
+        ]);
+        preparingOrdersList.appendChild(orderElement);
+      });
+    }
+  }
+  
+  // Update ready orders list
+  if (readyOrdersList) {
+    if (readyOrders.length > 0) {
+      readyOrdersList.innerHTML = '';
+      readyOrders.forEach(order => {
+        const orderElement = createOrderCard(order, [
+          { action: 'complete', label: 'Order Picked Up', icon: 'check-double', class: 'bg-green-700 hover:bg-green-800' }
+        ]);
+        readyOrdersList.appendChild(orderElement);
+      });
+    }
+  }
+  
+  // Update all orders list
+  if (allOrdersList) {
+    if (orders.length > 0) {
+      allOrdersList.innerHTML = '';
+      orders.forEach(order => {
+        const row = document.createElement('tr');
+        row.className = 'border-b border-gray-700';
+        
+        // Get status badge
+        let statusBadge = '';
+        switch (order.status) {
+          case 'new':
+            statusBadge = '<span class="px-2 py-1 bg-blue-900 text-blue-300 rounded-full text-xs">New</span>';
+            break;
+          case 'preparing':
+            statusBadge = '<span class="px-2 py-1 bg-yellow-900 text-yellow-300 rounded-full text-xs">Preparing</span>';
+            break;
+          case 'ready':
+            statusBadge = '<span class="px-2 py-1 bg-green-900 text-green-300 rounded-full text-xs">Ready</span>';
+            break;
+          case 'completed':
+            statusBadge = '<span class="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-xs">Completed</span>';
+            break;
+          case 'cancelled':
+            statusBadge = '<span class="px-2 py-1 bg-red-900 text-red-300 rounded-full text-xs">Cancelled</span>';
+            break;
+        }
+        
+        row.innerHTML = `
+          <td class="py-3 px-4">#${order.id.slice(-6)}</td>
+          <td class="py-3 px-4">${order.customerName || 'Anonymous'}</td>
+          <td class="py-3 px-4">${order.items ? order.items.length : 0} items</td>
+          <td class="py-3 px-4">₹${order.total || 0}</td>
+          <td class="py-3 px-4">${statusBadge}</td>
+          <td class="py-3 px-4">
+            <button class="text-gray-400 hover:text-white view-order" data-id="${order.id}">
+              <i class="fas fa-eye"></i>
+            </button>
+          </td>
+        `;
+        
+        allOrdersList.appendChild(row);
+      });
+      
+      // Add view order event listeners
+      document.querySelectorAll('.view-order').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const orderId = e.currentTarget.dataset.id;
+          viewOrderDetails(orderId);
+        });
+      });
+    }
+  }
+}
+
+// Reset Orders Lists
+function resetOrdersLists() {
+  if (newOrdersList) {
+    newOrdersList.innerHTML = '<div class="text-center py-4 text-gray-400"><p>No new orders</p></div>';
+  }
+  
+  if (preparingOrdersList) {
+    preparingOrdersList.innerHTML = '<div class="text-center py-4 text-gray-400"><p>No orders in preparation</p></div>';
+  }
+  
+  if (readyOrdersList) {
+    readyOrdersList.innerHTML = '<div class="text-center py-4 text-gray-400"><p>No orders ready for pickup</p></div>';
+  }
+  
+  if (allOrdersList) {
+    allOrdersList.innerHTML = '<tr><td colspan="6" class="py-4 px-4 text-center text-gray-400">No orders yet</td></tr>';
+  }
+}
+
+// Create Order Card
+function createOrderCard(order, actions) {
+  const card = document.createElement('div');
+  card.className = 'bg-dark-300 p-4 rounded-lg';
+  
+  let itemsList = '<p class="text-gray-400">No items</p>';
+  
+  if (order.items && order.items.length > 0) {
+    itemsList = '<ul class="text-sm text-gray-300 mt-2">';
+    order.items.forEach(item => {
+      itemsList += `<li>${item.quantity}x ${item.name}</li>`;
+    });
+    itemsList += '</ul>';
+  }
+  
+  let actionsHtml = '';
+  if (actions && actions.length > 0) {
+    actionsHtml = '<div class="flex flex-wrap mt-4 gap-2">';
+    actions.forEach(action => {
+      actionsHtml += `
+        <button class="px-3 py-1 rounded-md ${action.class} text-white text-sm order-action" data-action="${action.action}" data-id="${order.id}">
+          <i class="fas fa-${action.icon} mr-1"></i> ${action.label}
+        </button>
+      `;
+    });
+    actionsHtml += '</div>';
+  }
+  
+  card.innerHTML = `
+    <div class="flex justify-between items-start">
+      <div>
+        <h4 class="font-medium">Order #${order.id.slice(-6)}</h4>
+        <p class="text-sm text-gray-400">${order.customerName || 'Anonymous'}</p>
+      </div>
+      <div class="text-right">
+        <p class="font-medium">₹${order.total || 0}</p>
+        <p class="text-xs text-gray-400">${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleTimeString() : ''}</p>
+      </div>
+    </div>
+    <div class="mt-3">
+      <p class="text-sm font-medium">Items:</p>
+      ${itemsList}
+    </div>
+    ${actionsHtml}
+  `;
+  
+  // Add action event listeners
+  if (actions && actions.length > 0) {
+    setTimeout(() => {
+      card.querySelectorAll('.order-action').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = e.currentTarget.dataset.action;
+          const orderId = e.currentTarget.dataset.id;
+          updateOrderStatus(orderId, action);
+        });
+      });
+    }, 0);
+  }
+  
+  return card;
+}
+
+// View Order Details
+function viewOrderDetails(orderId) {
+  const order = orders.find(o => o.id === orderId);
+  if (!order || !orderDetailsModal || !orderDetailsContent) return;
+  
+  // Get status text
+  let statusText = '';
+  switch (order.status) {
+    case 'new':
+      statusText = 'New Order';
+      break;
+    case 'preparing':
+      statusText = 'Preparing';
+      break;
+    case 'ready':
+      statusText = 'Ready for Pickup';
+      break;
+    case 'completed':
+      statusText = 'Completed';
+      break;
+    case 'cancelled':
+      statusText = 'Cancelled';
+      break;
+  }
+  
+  // Format items list
+  let itemsList = '<p class="text-gray-400">No items</p>';
+  
+  if (order.items && order.items.length > 0) {
+    itemsList = '<div class="space-y-2 mt-2">';
+    order.items.forEach(item => {
+      itemsList += `
+        <div class="flex justify-between items-center">
+          <div>
+            <p>${item.quantity}x ${item.name}</p>
+            ${item.options ? `<p class="text-sm text-gray-400">${item.options}</p>` : ''}
+          </div>
+          <p>₹${item.price * item.quantity}</p>
+        </div>
+      `;
+    });
+    itemsList += '</div>';
+  }
+  
+  // Populate order details
+  orderDetailsContent.innerHTML = `
+    <div class="bg-dark-300 p-4 rounded-lg mb-4">
+      <div class="flex justify-between items-start">
+        <div>
+          <h4 class="font-medium">Order #${order.id.slice(-6)}</h4>
+          <p class="text-sm text-gray-400">${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString() : ''}</p>
+        </div>
+        <div class="px-2 py-1 rounded-full text-xs ${
+          order.status === 'new' ? 'bg-blue-900 text-blue-300' :
+          order.status === 'preparing' ? 'bg-yellow-900 text-yellow-300' :
+          order.status === 'ready' ? 'bg-green-900 text-green-300' :
+          order.status === 'completed' ? 'bg-gray-700 text-gray-300' :
+          'bg-red-900 text-red-300'
+        }">${statusText}</div>
+      </div>
+    </div>
+    
+    <div class="bg-dark-300 p-4 rounded-lg mb-4">
+      <h4 class="font-medium mb-2">Customer Information</h4>
+      <p><strong>Name:</strong> ${order.customerName || 'Anonymous'}</p>
+      <p><strong>Phone:</strong> ${order.customerPhone || 'N/A'}</p>
+      <p><strong>Address:</strong> ${order.customerAddress || 'N/A'}</p>
+    </div>
+    
+    <div class="bg-dark-300 p-4 rounded-lg mb-4">
+      <h4 class="font-medium mb-2">Order Items</h4>
+      ${itemsList}
+    </div>
+    
+    <div class="bg-dark-300 p-4 rounded-lg">
+      <h4 class="font-medium mb-2">Payment Summary</h4>
+      <div class="space-y-1">
+        <div class="flex justify-between">
+          <p>Subtotal</p>
+          <p>₹${order.subtotal || 0}</p>
+        </div>
+        <div class="flex justify-between">
+          <p>Delivery Fee</p>
+          <p>₹${order.deliveryFee || 0}</p>
+        </div>
+        <div class="flex justify-between">
+          <p>Tax</p>
+          <p>₹${order.tax || 0}</p>
+        </div>
+        <div class="flex justify-between font-bold mt-2 pt-2 border-t border-gray-700">
+          <p>Total</p>
+          <p>₹${order.total || 0}</p>
+        </div>
+        <div class="flex justify-between text-sm text-gray-400">
+          <p>Payment Method</p>
+          <p>${order.paymentMethod || 'Cash on Delivery'}</p>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Show modal
+  orderDetailsModal.classList.remove('hidden');
+}
+
+// Update Order Status
+async function updateOrderStatus(orderId, action) {
+  if (!currentUser) return;
+  
+  let newStatus = '';
+  let createTransaction = false;
+  
+  switch (action) {
+    case 'accept':
+      newStatus = 'preparing';
+      break;
+    case 'reject':
+      newStatus = 'cancelled';
+      break;
+    case 'ready':
+      newStatus = 'ready';
+      break;
+    case 'complete':
+      newStatus = 'completed';
+      createTransaction = true;
+      break;
+  }
+  
+  if (!newStatus) return;
+  
+  try {
+    const orderRef = doc(db, "restaurants", currentUser.uid, "orders", orderId);
+    const order = orders.find(o => o.id === orderId);
+    
+    await updateDoc(orderRef, {
+      status: newStatus,
+      updatedAt: Timestamp.now()
+    });
+    
+    // Create transaction if order is completed
+    if (createTransaction && order) {
+      await addDoc(collection(db, "restaurants", currentUser.uid, "transactions"), {
+        orderId: orderId,
+        amount: order.total || 0,
+        paymentMethod: order.paymentMethod || 'Cash on Delivery',
+        status: 'completed',
+        createdAt: Timestamp.now()
+      });
+    }
+    
+    // Reload orders
+    loadOrders(currentUser.uid);
+    
+    // Reload transactions if needed
+    if (createTransaction) {
+      loadTransactions(currentUser.uid);
+    }
+  } catch (error) {
+    console.error("Error updating order status:", error);
+  }
+}
+
+// Load Transactions
+async function loadTransactions(userId) {
+  try {
+    const transactionsSnapshot = await getDocs(
+      query(collection(db, "restaurants", userId, "transactions"), orderBy("createdAt", "desc"))
+    );
+    
+    transactions = [];
+    
+    if (!transactionsSnapshot.empty) {
+      transactionsSnapshot.forEach((doc) => {
+        transactions.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      // Update transactions list
+      updateTransactionsList();
+    } else {
+      if (transactionsList) {
+        transactionsList.innerHTML = '<tr><td colspan="6" class="py-4 px-4 text-center text-gray-400">No transactions yet</td></tr>';
+      }
+    }
+  } catch (error) {
+    console.error("Error loading transactions:", error);
+    if (transactionsList) {
+      transactionsList.innerHTML = '<tr><td colspan="6" class="py-4 px-4 text-center text-gray-400">No transactions yet</td></tr>';
+    }
+  }
+}
+
+// Update Transactions List
+function updateTransactionsList() {
+  if (!transactionsList) return;
+  
+  if (transactions.length > 0) {
+    transactionsList.innerHTML = '';
+    transactions.forEach(transaction => {
+      const row = document.createElement('tr');
+      row.className = 'border-b border-gray-700';
+      
+      // Get status badge
+      let statusBadge = '';
+      switch (transaction.status) {
+        case 'completed':
+          statusBadge = '<span class="px-2 py-1 bg-green-900 text-green-300 rounded-full text-xs">Completed</span>';
+          break;
+        case 'refunded':
+          statusBadge = '<span class="px-2 py-1 bg-red-900 text-red-300 rounded-full text-xs">Refunded</span>';
+          break;
+        default:
+          statusBadge = '<span class="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-xs">Pending</span>';
+      }
+      
+      row.innerHTML = `
+        <td class="py-3 px-4">#${transaction.id.slice(-6)}</td>
+        <td class="py-3 px-4">#${transaction.orderId ? transaction.orderId.slice(-6) : 'N/A'}</td>
+        <td class="py-3 px-4">${transaction.createdAt ? new Date(transaction.createdAt.seconds * 1000).toLocaleString() : 'N/A'}</td>
+        <td class="py-3 px-4">₹${transaction.amount || 0}</td>
+        <td class="py-3 px-4">${transaction.paymentMethod || 'Cash'}</td>
+        <td class="py-3 px-4">${statusBadge}</td>
+      `;
+      
+      transactionsList.appendChild(row);
+    });
+  } else {
+    transactionsList.innerHTML = '<tr><td colspan="6" class="py-4 px-4 text-center text-gray-400">No transactions yet</td></tr>';
+  }
+}
+
+// Event Listeners
+
+// Menu Toggle
+if (menuToggle) {
+  menuToggle.addEventListener('click', toggleMenu);
+}
+
+if (closeMenuBtn) {
+  closeMenuBtn.addEventListener('click', closeMenuSidebar);
+}
+
+if (overlay) {
+  overlay.addEventListener('click', closeMenuSidebar);
+}
+
+// Side Menu Items
+sideMenuItems.forEach(item => {
+  item.addEventListener('click', () => {
+    showSection(item.dataset.target);
+  });
+});
+
+// Bottom Nav Buttons
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    showSection(btn.dataset.target);
+  });
+});
+
+// Navigation Buttons
+if (loginBtn) {
+  loginBtn.addEventListener('click', () => showSection('login'));
+}
+
+if (registerBtn) {
+  registerBtn.addEventListener('click', () => showSection('register'));
+}
+
+if (goToLogin) {
+  goToLogin.addEventListener('click', () => showSection('login'));
+}
+
+if (goToRegister) {
+  goToRegister.addEventListener('click', () => showSection('register'));
+}
+
+if (getStartedBtn) {
+  getStartedBtn.addEventListener('click', () => showSection('register'));
+}
+
+// Logout
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  });
+}
+
+if (logoutBtnSettings) {
+  logoutBtnSettings.addEventListener('click', async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  });
+}
+
+// Same Phone Checkbox
+if (samePhone) {
+  samePhone.addEventListener('change', () => {
+    if (samePhone.checked) {
+      customerPhone.disabled = true;
+      customerPhone.value = document.getElementById('businessPhone').value;
+    } else {
+      customerPhone.disabled = false;
+    }
+  });
+  
+  document.getElementById('businessPhone').addEventListener('input', () => {
+    if (samePhone.checked) {
+      customerPhone.value = document.getElementById('businessPhone').value;
+    }
+  });
+}
+
+// Restaurant Status Toggles
+if (restaurantOpenToggle) {
+  restaurantOpenToggle.addEventListener('change', () => {
+    updateRestaurantOpenStatus(restaurantOpenToggle.checked);
+  });
+}
+
+if (rushHourToggle) {
+  rushHourToggle.addEventListener('change', () => {
+    updateRushHourStatus(rushHourToggle.checked);
+  });
+}
+
+// Add Item Modal
+if (addItemBtn) {
+  addItemBtn.addEventListener('click', () => {
+    if (addItemForm) {
+      addItemForm.reset();
+      addItemForm.dataset.mode = 'add';
+      delete addItemForm.dataset.itemId;
+    }
+    if (addItemModal) {
+      addItemModal.classList.remove('hidden');
+    }
+  });
+}
+
+if (closeItemModal) {
+  closeItemModal.addEventListener('click', () => {
+    if (addItemModal) {
+      addItemModal.classList.add('hidden');
+    }
+  });
+}
+
+if (cancelItemBtn) {
+  cancelItemBtn.addEventListener('click', () => {
+    if (addItemModal) {
+      addItemModal.classList.add('hidden');
+    }
+  });
+}
+
+// Order Details Modal
+if (closeOrderModal) {
+  closeOrderModal.addEventListener('click', () => {
+    if (orderDetailsModal) {
+      orderDetailsModal.classList.add('hidden');
+    }
+  });
+}
+
+if (closeOrderDetailsBtn) {
+  closeOrderDetailsBtn.addEventListener('click', () => {
+    if (orderDetailsModal) {
+      orderDetailsModal.classList.add('hidden');
+    }
+  });
+}
+
+// Add Category
+if (addCategoryBtn) {
+  addCategoryBtn.addEventListener('click', () => {
+    if (newCategory) {
+      const categoryName = newCategory.value.trim();
+      if (categoryName) {
+        addCategory(categoryName);
+      }
+    }
+  });
+}
+
+// Login Form
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // Auth state change listener will handle redirect
+    } catch (error) {
+      console.error("Error signing in:", error);
+      alert("Login failed: " + error.message);
+    }
+  });
+}
+
+// Register Form
+if (registerForm) {
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const restaurantName = document.getElementById('restaurantName').value;
+    const ownerName = document.getElementById('ownerName').value;
+    const businessPhone = document.getElementById('businessPhone').value;
+    const customerPhone = samePhone.checked ? businessPhone : document.getElementById('customerPhone').value;
+    const description = document.getElementById('description').value;
+    const fssaiLicense = document.getElementById('fssaiLicense').value;
+    const gstNumber = document.getElementById('gstNumber').value;
+    const panNumber = document.getElementById('panNumber').value;
+    const businessType = document.getElementById('businessType').value;
+    const upiId = document.getElementById('upiId').value;
+    const bankDetails = document.getElementById('bankDetails').value;
+    
+    try {
+      // Create user account
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Create restaurant profile
+      await setDoc(doc(db, "restaurants", user.uid), {
+        name: restaurantName,
+        ownerName: ownerName,
+        businessPhone: businessPhone,
+        customerPhone: customerPhone,
+        description: description,
+        email: email,
+        fssaiLicense: fssaiLicense,
+        gstNumber: gstNumber,
+        panNumber: panNumber,
+        businessType: businessType,
+        upiId: upiId,
+        bankDetails: bankDetails,
+        status: 'open',
+        createdAt: Timestamp.now()
+      });
+      
+      // Auth state change listener will handle redirect
+    } catch (error) {
+      console.error("Error registering:", error);
+      alert("Registration failed: " + error.message);
+    }
+  });
+}
+
+// Add Item Form
+if (addItemForm) {
+  addItemForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('itemName').value;
+    const categoryId = document.getElementById('itemCategory').value;
+    const price = parseFloat(document.getElementById('itemPrice').value);
+    const imageUrl = document.getElementById('itemImage').value;
+    const description = document.getElementById('itemDescription').value;
+    const calories = document.getElementById('itemCalories').value ? parseInt(document.getElementById('itemCalories').value) : null;
+    const allergens = document.getElementById('itemAllergens').value;
+    
+    const itemData = {
+      name,
+      categoryId,
+      price,
+      imageUrl,
+      description,
+      calories,
+      allergens,
+      updatedAt: Timestamp.now()
+    };
+    
+    if (addItemForm.dataset.mode === 'edit') {
+      await updateMenuItem(addItemForm.dataset.itemId, itemData);
+    } else {
+      await addMenuItem(itemData);
+    }
+  });
+}
+
+// Profile Form
+if (profileForm) {
+  profileForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (!currentUser) return;
+    
+    const name = document.getElementById('settingsName').value;
+    const ownerName = document.getElementById('settingsOwner').value;
+    const businessPhone = document.getElementById('settingsPhone').value;
+    const customerPhone = document.getElementById('settingsCustomerPhone').value;
+    const description = document.getElementById('settingsDescription').value;
+    
+    try {
+      await updateDoc(doc(db, "restaurants", currentUser.uid), {
+        name,
+        ownerName,
+        businessPhone,
+        customerPhone,
+        description,
+        updatedAt: Timestamp.now()
+      });
+      
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile: " + error.message);
+    }
+  });
+}
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', () => {
+  // Check if user is already logged in
+  onAuthStateChanged(auth, (user) => {
+    // Auth state change listener will handle the rest
+  });
+});
+  </script>
+</body>
+</html>
