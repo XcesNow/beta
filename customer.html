@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xces</title>
+  <title>Xces Restaurant</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -142,50 +142,6 @@
       color: #ffc107;
       font-size: 14px;
     }
-
-    /* Star rating selector */
-    .star-rating {
-      display: inline-flex;
-      cursor: pointer;
-    }
-
-    .star-rating i {
-      color: #5a5a5a;
-      transition: color 0.2s;
-      font-size: 24px;
-      margin-right: 5px;
-    }
-
-    .star-rating i.active,
-    .star-rating i:hover,
-    .star-rating i:hover ~ i {
-      color: #ffc107;
-    }
-
-    .star-rating:not(:hover) i.active {
-      color: #ffc107;
-    }
-
-    /* Badge */
-    .badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .badge-rush {
-      background-color: rgba(239, 68, 68, 0.9);
-      color: white;
-    }
-
-    .badge-top {
-      background-color: rgba(16, 185, 129, 0.9);
-      color: white;
-    }
   </style>
   <script>
     tailwind.config = {
@@ -206,7 +162,7 @@
   </script>
 </head>
 <body class="bg-dark-200 text-white">
-  <!-- Overlay for side menu and modals -->
+  <!-- Overlay for side menu -->
   <div class="overlay fixed inset-0 bg-black bg-opacity-50 z-30" id="overlay"></div>
 
   <!-- Side Menu -->
@@ -271,7 +227,7 @@
           <button id="menuToggle" class="text-gray-400 hover:text-white mr-4">
             <i class="fas fa-bars"></i>
           </button>
-          <h1 class="text-xl font-bold text-primary">Xces</h1>
+          <h1 class="text-xl font-bold text-primary">Xces Restaurant</h1>
         </div>
         <div class="flex items-center space-x-4">
           <div class="relative">
@@ -341,14 +297,6 @@
           </div>
         </div>
 
-        <!-- Personalized Recommendations (Only visible when logged in) -->
-        <div id="personalizedRecommendations" class="mb-12 hidden">
-          <h2 class="text-2xl font-bold mb-6">Recommended For You</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="recommendedDishes">
-            <!-- Recommended dishes will be populated here -->
-          </div>
-        </div>
-
         <!-- Featured Restaurants -->
         <div class="mb-12">
           <h2 class="text-2xl font-bold mb-6">Featured Restaurants</h2>
@@ -362,7 +310,7 @@
 
         <!-- Popular Dishes -->
         <div class="mb-12">
-          <h2 class="text-2xl font-bold mb-6">Top Rated Dishes</h2>
+          <h2 class="text-2xl font-bold mb-6">Popular Dishes</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="popularDishes">
             <!-- Dish cards will be populated here -->
             <div class="bg-dark-100 rounded-lg overflow-hidden shadow-lg food-card skeleton h-64"></div>
@@ -589,43 +537,6 @@
                     <label for="profilePhone" class="block text-gray-300 mb-2">Phone Number</label>
                     <input type="tel" id="profilePhone" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                   </div>
-                  <div>
-                    <label for="profileDOB" class="block text-gray-300 mb-2">Date of Birth</label>
-                    <input type="date" id="profileDOB" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                  </div>
-                </div>
-                <div class="mb-4">
-                  <label for="profileBio" class="block text-gray-300 mb-2">Bio (Optional)</label>
-                  <textarea id="profileBio" rows="3" class="w-full px-4 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Tell us a little about yourself..."></textarea>
-                </div>
-                <div class="mb-4">
-                  <label class="block text-gray-300 mb-2">Food Preferences (Optional)</label>
-                  <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <label class="flex items-center">
-                      <input type="checkbox" id="prefVegetarian" class="mr-2">
-                      <span>Vegetarian</span>
-                    </label>
-                    <label class="flex items-center">
-                      <input type="checkbox" id="prefVegan" class="mr-2">
-                      <span>Vegan</span>
-                    </label>
-                    <label class="flex items-center">
-                      <input type="checkbox" id="prefGlutenFree" class="mr-2">
-                      <span>Gluten-Free</span>
-                    </label>
-                    <label class="flex items-center">
-                      <input type="checkbox" id="prefSpicy" class="mr-2">
-                      <span>Spicy Food</span>
-                    </label>
-                    <label class="flex items-center">
-                      <input type="checkbox" id="prefHealthy" class="mr-2">
-                      <span>Healthy Options</span>
-                    </label>
-                    <label class="flex items-center">
-                      <input type="checkbox" id="prefDesserts" class="mr-2">
-                      <span>Desserts</span>
-                    </label>
-                  </div>
                 </div>
                 <button type="submit" class="px-4 py-2 bg-primary hover:bg-blue-700 rounded-md transition">Save Changes</button>
               </form>
@@ -670,14 +581,6 @@
                 <button id="deleteAccountBtn" class="w-full px-4 py-2 bg-red-900 hover:bg-red-800 rounded-md transition text-left">
                   <i class="fas fa-trash mr-2"></i> Delete Account
                 </button>
-              </div>
-            </div>
-            
-            <div class="bg-dark-100 rounded-lg p-6 shadow-lg mb-6">
-              <h3 class="text-xl font-semibold mb-4">Your Ratings & Reviews</h3>
-              <div id="userReviews" class="space-y-4">
-                <!-- User reviews will be populated here -->
-                <p class="text-gray-400">No ratings or reviews yet</p>
               </div>
             </div>
             
@@ -1076,7 +979,6 @@
           </div>
           <div class="mb-4">
             <label for="addressLine1" class="block text-gray-300 mb-2">Address Line 1</label>
-            <input type="text" i  class="block text-gray-300 mb-2">Address Line 1</label>
             <input type="text" id="addressLine1" class="w-full px-3 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
           </div>
           <div class="mb-4">
@@ -1106,29 +1008,6 @@
     </div>
   </div>
 
-  <!-- Food Detail Modal -->
-  <div id="foodDetailModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-    <div class="bg-dark-100 rounded-lg shadow-lg w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-      <div class="p-4 border-b border-gray-700 flex justify-between items-center sticky top-0 bg-dark-100 z-10">
-        <h3 class="text-xl font-bold" id="foodDetailTitle">Food Details</h3>
-        <button id="closeFoodDetailBtn" class="text-gray-400 hover:text-white">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="p-4" id="foodDetailContent">
-        <!-- Food details will be populated here -->
-      </div>
-      <div class="p-4 border-t border-gray-700 flex justify-between items-center sticky bottom-0 bg-dark-100">
-        <div>
-          <span class="text-lg font-bold" id="foodDetailPrice">₹0</span>
-        </div>
-        <button id="addToCartDetailBtn" class="px-4 py-2 bg-primary hover:bg-blue-700 rounded-md transition">
-          Add to Cart
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Order Success Modal -->
   <div id="orderSuccessModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
     <div class="bg-dark-100 rounded-lg shadow-lg w-full max-w-md mx-4 p-6 text-center">
@@ -1152,96 +1031,12 @@
     </div>
   </div>
 
-  <!-- Order Details Modal -->
-  <div id="orderDetailsModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-    <div class="bg-dark-100 rounded-lg shadow-lg w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-      <div class="p-4 border-b border-gray-700 flex justify-between items-center sticky top-0 bg-dark-100">
-        <h3 class="text-xl font-bold">Order Details</h3>
-        <button id="closeOrderDetailsBtn" class="text-gray-400 hover:text-white">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="p-4" id="orderDetailsContent">
-        <!-- Order details will be populated here -->
-      </div>
-      <div id="orderActionButtons" class="p-4 border-t border-gray-700 flex justify-between items-center sticky bottom-0 bg-dark-100">
-        <button id="downloadBillBtn" class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded-md transition hidden">
-          <i class="fas fa-download mr-2"></i> Download Bill
-        </button>
-        <button id="rateOrderBtn" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-md transition hidden">
-          <i class="fas fa-star mr-2"></i> Rate Order
-        </button>
-        <button id="closeOrderDetailBtn" class="px-4 py-2 border border-gray-700 hover:bg-dark-300 rounded-md transition">
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Rate Restaurant Modal -->
-  <div id="rateRestaurantModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-    <div class="bg-dark-100 rounded-lg shadow-lg w-full max-w-md mx-4">
-      <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-        <h3 class="text-xl font-bold">Rate Your Experience</h3>
-        <button id="closeRatingBtn" class="text-gray-400 hover:text-white">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="p-4">
-        <form id="ratingForm">
-          <div class="mb-4 text-center">
-            <p class="mb-2 text-gray-300">How would you rate your experience?</p>
-            <div class="star-rating mb-2">
-              <i class="far fa-star" data-rating="1"></i>
-              <i class="far fa-star" data-rating="2"></i>
-              <i class="far fa-star" data-rating="3"></i>
-              <i class="far fa-star" data-rating="4"></i>
-              <i class="far fa-star" data-rating="5"></i>
-            </div>
-            <p class="text-sm text-gray-400" id="ratingText">Select Rating</p>
-            <input type="hidden" id="ratingValue" value="0">
-          </div>
-          <div class="mb-4">
-            <label for="ratingFood" class="block text-gray-300 mb-2">Food Quality</label>
-            <div class="star-rating mb-2" id="foodRating">
-              <i class="far fa-star" data-rating="1"></i>
-              <i class="far fa-star" data-rating="2"></i>
-              <i class="far fa-star" data-rating="3"></i>
-              <i class="far fa-star" data-rating="4"></i>
-              <i class="far fa-star" data-rating="5"></i>
-            </div>
-            <input type="hidden" id="foodRatingValue" value="0">
-          </div>
-          <div class="mb-4">
-            <label for="ratingDelivery" class="block text-gray-300 mb-2">Delivery Experience</label>
-            <div class="star-rating mb-2" id="deliveryRating">
-              <i class="far fa-star" data-rating="1"></i>
-              <i class="far fa-star" data-rating="2"></i>
-              <i class="far fa-star" data-rating="3"></i>
-              <i class="far fa-star" data-rating="4"></i>
-              <i class="far fa-star" data-rating="5"></i>
-            </div>
-            <input type="hidden" id="deliveryRatingValue" value="0">
-          </div>
-          <div class="mb-4">
-            <label for="reviewComment" class="block text-gray-300 mb-2">Your Review (Optional)</label>
-            <textarea id="reviewComment" rows="3" class="w-full px-3 py-2 bg-dark-300 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Tell us about your experience..."></textarea>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" id="cancelRatingBtn" class="px-4 py-2 border border-gray-700 hover:bg-dark-300 rounded-md transition mr-2">Cancel</button>
-            <button type="submit" id="submitRatingBtn" class="px-4 py-2 bg-primary hover:bg-blue-700 rounded-md transition">Submit Rating</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-analytics.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, Timestamp, limit } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -1318,26 +1113,6 @@
     const savedAddresses = document.getElementById('savedAddresses');
     const paymentMethods = document.getElementById('paymentMethods');
     const ordersList = document.getElementById('ordersList');
-    const foodDetailModal = document.getElementById('foodDetailModal');
-    const closeFoodDetailBtn = document.getElementById('closeFoodDetailBtn');
-    const foodDetailContent = document.getElementById('foodDetailContent');
-    const foodDetailTitle = document.getElementById('foodDetailTitle');
-    const foodDetailPrice = document.getElementById('foodDetailPrice');
-    const addToCartDetailBtn = document.getElementById('addToCartDetailBtn');
-    const orderDetailsModal = document.getElementById('orderDetailsModal');
-    const closeOrderDetailsBtn = document.getElementById('closeOrderDetailsBtn');
-    const closeOrderDetailBtn = document.getElementById('closeOrderDetailBtn');
-    const orderDetailsContent = document.getElementById('orderDetailsContent');
-    const downloadBillBtn = document.getElementById('downloadBillBtn');
-    const rateOrderBtn = document.getElementById('rateOrderBtn');
-    const rateRestaurantModal = document.getElementById('rateRestaurantModal');
-    const closeRatingBtn = document.getElementById('closeRatingBtn');
-    const cancelRatingBtn = document.getElementById('cancelRatingBtn');
-    const submitRatingBtn = document.getElementById('submitRatingBtn');
-    const ratingForm = document.getElementById('ratingForm');
-    const ratingText = document.getElementById('ratingText');
-    const personalizedRecommendations = document.getElementById('personalizedRecommendations');
-    const recommendedDishes = document.getElementById('recommendedDishes');
 
     // Global variables
     let currentUser = null;
@@ -1347,11 +1122,6 @@
     let addresses = [];
     let orders = [];
     let currentRestaurant = null;
-    let currentFoodItem = null;
-    let currentOrderForRating = null;
-    let userReviews = [];
-    let userPreferences = {};
-    let recommendedItems = [];
 
     // Navigation Functions
     function showSection(sectionId) {
@@ -1406,12 +1176,6 @@
         
         // Load orders
         loadOrders(user.uid);
-        
-        // Load user reviews
-        loadUserReviews(user.uid);
-        
-        // Load recommendations based on user history
-        loadRecommendations(user.uid);
       } else {
         // User is signed out
         currentUser = null;
@@ -1433,9 +1197,6 @@
         // Hide user profile in sidebar
         userProfileSidebar.classList.add('hidden');
         
-        // Hide personalized recommendations
-        personalizedRecommendations.classList.add('hidden');
-        
         // Clear cart
         cart = [];
         updateCartUI();
@@ -1449,7 +1210,6 @@
         
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          userPreferences = userData.preferences || {};
           
           // Update user profile in sidebar
           document.querySelectorAll('.user-name').forEach(el => {
@@ -1465,18 +1225,6 @@
             document.getElementById('profileName').value = userData.name || '';
             document.getElementById('profileEmail').value = userData.email || '';
             document.getElementById('profilePhone').value = userData.phone || '';
-            document.getElementById('profileDOB').value = userData.dob || '';
-            document.getElementById('profileBio').value = userData.bio || '';
-            
-            // Set food preferences
-            if (userData.preferences) {
-              document.getElementById('prefVegetarian').checked = userData.preferences.vegetarian || false;
-              document.getElementById('prefVegan').checked = userData.preferences.vegan || false;
-              document.getElementById('prefGlutenFree').checked = userData.preferences.glutenFree || false;
-              document.getElementById('prefSpicy').checked = userData.preferences.spicy || false;
-              document.getElementById('prefHealthy').checked = userData.preferences.healthy || false;
-              document.getElementById('prefDesserts').checked = userData.preferences.desserts || false;
-            }
           }
         } else {
           // Create user document if it doesn't exist
@@ -1490,23 +1238,6 @@
         }
       } catch (error) {
         console.error("Error loading user data:", error);
-      }
-    }
-
-    // Save User Data
-    async function saveUserData(userData) {
-      if (!currentUser) return;
-      
-      try {
-        await updateDoc(doc(db, "users", currentUser.uid), {
-          ...userData,
-          updatedAt: Timestamp.now()
-        });
-        
-        return true;
-      } catch (error) {
-        console.error("Error saving user data:", error);
-        return false;
       }
     }
 
@@ -1997,29 +1728,18 @@
               statusBadge = '<span class="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-xs">Unknown</span>';
           }
           
-          // Check if restaurant is in rush hour
-          let rushHourBadge = '';
-          if (order.restaurantId) {
-            const restaurant = restaurants.find(r => r.id === order.restaurantId);
-            if (restaurant && restaurant.status === 'rush') {
-              rushHourBadge = '<span class="ml-2 px-2 py-1 bg-red-900 text-red-300 rounded-full text-xs">High Demand</span>';
-            }
-          }
-          
           orderEl.innerHTML = `
             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
                 <div class="flex items-center mb-2">
                   <h4 class="font-medium mr-2">Order #${order.id.slice(-6)}</h4>
                   ${statusBadge}
-                  ${rushHourBadge}
                 </div>
                 <p class="text-sm text-gray-400">${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString() : ''}</p>
                 <p class="text-sm text-gray-400">${order.restaurantName || 'Restaurant'}</p>
-                ${rushHourBadge ? '<p class="text-xs text-red-400 mt-1">Note: Restaurant is experiencing high demand. Your order may be delayed.</p>' : ''}
               </div>
               <div class="mt-4 md:mt-0 flex flex-col md:items-end">
-                <p class="font-medium">₹${order.total ? order.total.toFixed(2) : '0.00'}</p>
+                <p class="font-medium">₹${order.total || 0}</p>
                 <button class="view-order mt-2 px-3 py-1 bg-primary hover:bg-blue-700 rounded-md text-sm" data-id="${order.id}">
                   View Details
                 </button>
@@ -2047,783 +1767,353 @@
       if (!order) return;
       
       // Show order details modal
-      orderDetailsModal.classList.add('open');
-      
-      // Format date
-      const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString() : 'Unknown date';
-      
-      // Get status badge
-      let statusBadge = '';
-      switch (order.status) {
-        case 'pending':
-          statusBadge = '<span class="px-2 py-1 bg-yellow-900 text-yellow-300 rounded-full text-xs">Pending</span>';
-          break;
-        case 'confirmed':
-          statusBadge = '<span class="px-2 py-1 bg-blue-900 text-blue-300 rounded-full text-xs">Confirmed</span>';
-          break;
-        case 'preparing':
-          statusBadge = '<span class="px-2 py-1 bg-purple-900 text-purple-300 rounded-full text-xs">Preparing</span>';
-          break;
-        case 'out_for_delivery':
-          statusBadge = '<span class="px-2 py-1 bg-indigo-900 text-indigo-300 rounded-full text-xs">Out for Delivery</span>';
-          break;
-        case 'delivered':
-          statusBadge = '<span class="px-2 py-1 bg-green-900 text-green-300 rounded-full text-xs">Delivered</span>';
-          break;
-        case 'cancelled':
-          statusBadge = '<span class="px-2 py-1 bg-red-900 text-red-300 rounded-full text-xs">Cancelled</span>';
-          break;
-        default:
-          statusBadge = '<span class="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-xs">Unknown</span>';
-      }
-      
-      // Check if restaurant is in rush hour
-      let rushHourNotice = '';
-      if (order.restaurantId) {
-        const restaurant = restaurants.find(r => r.id === order.restaurantId);
-        if (restaurant && restaurant.status === 'rush') {
-          rushHourNotice = `
-            <div class="bg-red-900 bg-opacity-20 p-3 rounded-md my-4 border border-red-700">
-              <div class="flex items-start">
-                <i class="fas fa-exclamation-circle text-red-500 mt-1 mr-2"></i>
-                <div>
-                  <p class="font-medium text-red-400">Restaurant is experiencing high demand</p>
-                  <p class="text-sm text-red-300">Your order may take longer than usual to prepare.</p>
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      }
-      
-      // Format items
-      let itemsHtml = '<div class="space-y-2">';
-      if (order.items && order.items.length > 0) {
-        order.items.forEach(item => {
-          itemsHtml += `
-            <div class="flex justify-between items-center py-2 border-b border-gray-700">
-              <div>
-                <p>${item.quantity}x ${item.name}</p>
-              </div>
-              <p>₹${(item.price * item.quantity).toFixed(2)}</p>
-            </div>
-          `;
-        });
-      } else {
-        itemsHtml += '<p class="text-gray-400">No items in this order</p>';
-      }
-      itemsHtml += '</div>';
-      
-      // Set order details content
-      orderDetailsContent.innerHTML = `
-        <div class="space-y-6">
-          <div class="flex justify-between items-start">
-            <div>
-              <h3 class="text-xl font-bold mb-1">Order #${order.id.slice(-6)}</h3>
-              <p class="text-gray-400">${orderDate}</p>
-            </div>
-            <div>
-              ${statusBadge}
-            </div>
-          </div>
-          
-          ${rushHourNotice}
-          
-          <div class="bg-dark-300 p-4 rounded-lg">
-            <h4 class="font-medium mb-3">Restaurant</h4>
-            <p>${order.restaurantName || 'Unknown restaurant'}</p>
-          </div>
-          
-          <div class="bg-dark-300 p-4 rounded-lg">
-            <h4 class="font-medium mb-3">Delivery Address</h4>
-            ${order.deliveryAddress ? `
-              <p>${order.deliveryAddress.addressLine1}</p>
-              ${order.deliveryAddress.addressLine2 ? `<p>${order.deliveryAddress.addressLine2}</p>` : ''}
-              <p>${order.deliveryAddress.city}, ${order.deliveryAddress.zipCode}</p>
-            ` : '<p class="text-gray-400">No delivery address provided</p>'}
-          </div>
-          
-          <div class="bg-dark-300 p-4 rounded-lg">
-            <h4 class="font-medium mb-3">Order Items</h4>
-            ${itemsHtml}
-          </div>
-          
-          <div class="bg-dark-300 p-4 rounded-lg">
-            <h4 class="font-medium mb-3">Payment Summary</h4>
-            <div class="space-y-2">
-              <div class="flex justify-between">
-                <span>Subtotal</span>
-                <span>₹${order.subtotal ? order.subtotal.toFixed(2) : '0.00'}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Delivery Fee</span>
-                <span>₹${order.deliveryFee ? order.deliveryFee.toFixed(2) : '0.00'}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Tax</span>
-                <span>₹${order.tax ? order.tax.toFixed(2) : '0.00'}</span>
-              </div>
-              <div class="flex justify-between font-bold pt-2 mt-2 border-t border-gray-700">
-                <span>Total</span>
-                <span>₹${order.total ? order.total.toFixed(2) : '0.00'}</span>
-              </div>
-              <div class="flex justify-between text-sm text-gray-400 pt-1">
-                <span>Payment Method</span>
-                <span>${order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod === 'card' ? 'Credit/Debit Card' : order.paymentMethod === 'upi' ? 'UPI' : order.paymentMethod || 'Unknown'}</span>
-              </div>
-            </div>
-          </div>
-          
-          ${order.notes ? `
-            <div class="bg-dark-300 p-4 rounded-lg">
-              <h4 class="font-medium mb-3">Order Notes</h4>
-              <p>${order.notes}</p>
-            </div>
-          ` : ''}
-        </div>
-      `;
-      
-      // Show/hide appropriate action buttons
-      downloadBillBtn.classList.add('hidden');
-      rateOrderBtn.classList.add('hidden');
-      
-      // Show download bill button if order is confirmed, delivered, etc. (not pending or cancelled)
-      if (order.status !== 'pending' && order.status !== 'cancelled') {
-        downloadBillBtn.classList.remove('hidden');
-        downloadBillBtn.onclick = () => generateBill(order);
-      }
-      
-      // Show rate order button if order is delivered and not already rated
-      if (order.status === 'delivered') {
-        // Check if order has been rated
-        const isRated = userReviews.some(review => review.orderId === order.id);
-        
-        if (!isRated) {
-          rateOrderBtn.classList.remove('hidden');
-          rateOrderBtn.onclick = () => {
-            currentOrderForRating = order;
-            orderDetailsModal.classList.remove('open');
-            rateRestaurantModal.classList.add('open');
-          };
-        }
-      }
+      // This would be implemented in a real application
+      alert(`Order details for order #${orderId.slice(-6)}`);
     }
 
-    // Generate Bill
-    function generateBill(order) {
-      // Create a bill document to download
-      const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString() : 'Unknown date';
-      
-      // Format items
-      let itemsHtml = '';
-      if (order.items && order.items.length > 0) {
-        order.items.forEach(item => {
-          itemsHtml += `
-            <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #444;">${item.name}</td>
-              <td style="padding: 8px; border-bottom: 1px solid #444; text-align: center;">${item.quantity}</td>
-              <td style="padding: 8px; border-bottom: 1px solid #444; text-align: right;">₹${item.price.toFixed(2)}</td>
-              <td style="padding: 8px; border-bottom: 1px solid #444; text-align: right;">₹${(item.price * item.quantity).toFixed(2)}</td>
-            </tr>
-          `;
-        });
-      }
-      
-      const billHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Invoice #${order.id.slice(-6)}</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              line-height: 1.6;
-              color: #333;
-              background-color: #f9f9f9;
-              margin: 0;
-              padding: 20px;
-            }
-            .invoice {
-              max-width: 800px;
-              margin: 0 auto;
-              background-color: #fff;
-              padding: 30px;
-              border-radius: 8px;
-              box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            }
-            .header {
-              text-align: center;
-              margin-bottom: 30px;
-              border-bottom: 2px solid #0049ff;
-              padding-bottom: 20px;
-            }
-            .header h1 {
-              color: #0049ff;
-              margin: 0;
-              font-size: 28px;
-            }
-            .header p {
-              margin: 5px 0 0;
-              color: #666;
-            }
-            .info-sections {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 30px;
-            }
-            .info-section {
-              width: 48%;
-            }
-            .info-section h3 {
-              margin-top: 0;
-              border-bottom: 1px solid #eee;
-              padding-bottom: 5px;
-              color: #0049ff;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-bottom: 30px;
-            }
-            th {
-              background-color: #0049ff;
-              color: white;
-              text-align: left;
-              padding: 10px;
-            }
-            td {
-              padding: 8px;
-              border-bottom: 1px solid #eee;
-            }
-            .total-section {
-              text-align: right;
-            }
-            .total-row {
-              display: flex;
-              justify-content: flex-end;
-              margin-bottom: 5px;
-            }
-            .total-label {
-              width: 150px;
-              text-align: left;
-            }
-            .total-value {
-              width: 100px;
-              text-align: right;
-            }
-            .grand-total {
-              font-weight: bold;
-              font-size: 18px;
-              border-top: 2px solid #0049ff;
-              padding-top: 5px;
-            }
-            .footer {
-              margin-top: 50px;
-              text-align: center;
-              color: #666;
-              font-size: 14px;
-              border-top: 1px solid #eee;
-              padding-top: 20px;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="invoice">
-            <div class="header">
-              <h1>Xces Restaurant</h1>
-              <p>Order Invoice</p>
-            </div>
-            
-            <div class="info-sections">
-              <div class="info-section">
-                <h3>Restaurant Details</h3>
-                <p><strong>${order.restaurantName || 'Restaurant'}</strong></p>
-                <p>Invoice #${order.id.slice(-6)}</p>
-                <p>Date: ${orderDate}</p>
-              </div>
-              
-              <div class="info-section">
-                <h3>Delivery Address</h3>
-                ${order.deliveryAddress ? `
-                  <p>${order.deliveryAddress.addressLine1}</p>
-                  ${order.deliveryAddress.addressLine2 ? `<p>${order.deliveryAddress.addressLine2}</p>` : ''}
-                  <p>${order.deliveryAddress.city}, ${order.deliveryAddress.zipCode}</p>
-                ` : '<p>No delivery address provided</p>'}
-              </div>
-            </div>
-            
-            <table>
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th style="text-align: center;">Quantity</th>
-                  <th style="text-align: right;">Price</th>
-                  <th style="text-align: right;">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${itemsHtml}
-              </tbody>
-            </table>
-            
-            <div class="total-section">
-              <div class="total-row">
-                <div class="total-label">Subtotal:</div>
-                <div class="total-value">₹${order.subtotal ? order.subtotal.toFixed(2) : '0.00'}</div>
-              </div>
-              <div class="total-row">
-                <div class="total-label">Delivery Fee:</div>
-                <div class="total-value">₹${order.deliveryFee ? order.deliveryFee.toFixed(2) : '0.00'}</div>
-              </div>
-              <div class="total-row">
-                <div class="total-label">Tax:</div>
-                <div class="total-value">₹${order.tax ? order.tax.toFixed(2) : '0.00'}</div>
-              </div>
-              <div class="total-row grand-total">
-                <div class="total-label">Total:</div>
-                <div class="total-value">₹${order.total ? order.total.toFixed(2) : '0.00'}</div>
-              </div>
-              <div class="total-row">
-                <div class="total-label">Payment Method:</div>
-                <div class="total-value">${order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod === 'card' ? 'Credit/Debit Card' : order.paymentMethod === 'upi' ? 'UPI' : order.paymentMethod || 'Unknown'}</div>
-              </div>
-            </div>
-            
-            <div class="footer">
-              <p>Thank you for your order!</p>
-              <p>For any inquiries, please contact support@xcesrestaurant.com</p>
-            </div>
-          </div>
-        </body>
-        </html>
-      `;
-      
-      // Create a Blob with the HTML content
-      const blob = new Blob([billHtml], { type: 'text/html' });
-      
-      // Create a link element and trigger download
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `invoice-${order.id.slice(-6)}.html`;
-      link.click();
-      
-      // Clean up
-      URL.revokeObjectURL(link.href);
-    }
-
-    // Load User Reviews
-    async function loadUserReviews(userId) {
+    // Load Restaurants
+    async function loadRestaurants() {
       try {
-        const reviewsSnapshot = await getDocs(
-          query(collection(db, "users", userId, "reviews"), orderBy("createdAt", "desc"))
-        );
+        const restaurantsSnapshot = await getDocs(collection(db, "restaurants"));
         
-        userReviews = [];
+        restaurants = [];
         
-        if (!reviewsSnapshot.empty) {
-          reviewsSnapshot.forEach((doc) => {
-            userReviews.push({
-              id: doc.id,
-              ...doc.data()
-            });
-          });
-          
-          // Update user reviews UI
-          updateUserReviewsUI();
-        } else {
-          if (document.getElementById('userReviews')) {
-            document.getElementById('userReviews').innerHTML = '<p class="text-gray-400">No ratings or reviews yet</p>';
-          }
-        }
-      } catch (error) {
-        console.error("Error loading user reviews:", error);
-        if (document.getElementById('userReviews')) {
-          document.getElementById('userReviews').innerHTML = '<p class="text-gray-400">No ratings or reviews yet</p>';
-        }
-      }
-    }
-
-    // Update User Reviews UI
-    function updateUserReviewsUI() {
-      const userReviewsElement = document.getElementById('userReviews');
-      if (!userReviewsElement) return;
-      
-      if (userReviews.length > 0) {
-        userReviewsElement.innerHTML = '';
-        userReviews.forEach(review => {
-          const reviewEl = document.createElement('div');
-          reviewEl.className = 'bg-dark-300 p-4 rounded-lg';
-          
-          reviewEl.innerHTML = `
-            <div class="flex justify-between items-start mb-2">
-              <div>
-                <p class="font-medium">${review.restaurantName || 'Restaurant'}</p>
-                <p class="text-sm text-gray-400">${review.createdAt ? new Date(review.createdAt.seconds * 1000).toLocaleDateString() : ''}</p>
-              </div>
-              <div class="stars-container">
-                ${getStarRating(review.rating || 0)}
-              </div>
-            </div>
-            ${review.comment ? `<p class="text-sm mt-2">${review.comment}</p>` : ''}
-          `;
-          
-          userReviewsElement.appendChild(reviewEl);
-        });
-      } else {
-        userReviewsElement.innerHTML = '<p class="text-gray-400">No ratings or reviews yet</p>';
-      }
-    }
-
-    // Add Review
-    async function addReview(reviewData) {
-      if (!currentUser) return;
-      
-      try {
-            // Add Review
-    async function addReview(reviewData) {
-      if (!currentUser) return;
-      
-      try {
-        // Add review to user's reviews
-        const reviewRef = await addDoc(collection(db, "users", currentUser.uid, "reviews"), {
-          orderId: reviewData.orderId,
-          restaurantId: reviewData.restaurantId,
-          restaurantName: reviewData.restaurantName,
-          rating: reviewData.rating,
-          foodRating: reviewData.foodRating,
-          deliveryRating: reviewData.deliveryRating,
-          comment: reviewData.comment,
-          createdAt: Timestamp.now()
-        });
-        
-        // Also add review to restaurant's reviews collection
-        await addDoc(collection(db, "restaurants", reviewData.restaurantId, "reviews"), {
-          userId: currentUser.uid,
-          userName: currentUser.displayName || currentUser.email.split('@')[0] || "Anonymous",
-          rating: reviewData.rating,
-          foodRating: reviewData.foodRating,
-          deliveryRating: reviewData.deliveryRating,
-          comment: reviewData.comment,
-          createdAt: Timestamp.now()
-        });
-        
-        // Update restaurant's average rating
-        const reviewsSnapshot = await getDocs(collection(db, "restaurants", reviewData.restaurantId, "reviews"));
-        let totalRating = 0;
-        let reviewCount = 0;
-        
-        reviewsSnapshot.forEach(doc => {
-          totalRating += doc.data().rating || 0;
-          reviewCount++;
-        });
-        
-        const newAverageRating = reviewCount > 0 ? (totalRating / reviewCount).toFixed(1) : 0;
-        
-        // Update restaurant document with new average rating
-        await updateDoc(doc(db, "restaurants", reviewData.restaurantId), {
-          rating: parseFloat(newAverageRating),
-          reviewCount: reviewCount,
-          updatedAt: Timestamp.now()
-        });
-        
-        // Mark order as reviewed
-        await updateDoc(doc(db, "users", currentUser.uid, "orders", reviewData.orderId), {
-          reviewed: true,
-          updatedAt: Timestamp.now()
-        });
-        
-        // Reload user reviews
-        loadUserReviews(currentUser.uid);
-        
-        // Close modal and show success message
-        rateRestaurantModal.classList.remove('open');
-        alert("Thank you for your review!");
-        
-        return true;
-      } catch (error) {
-        console.error("Error submitting review:", error);
-        alert("Failed to submit review. Please try again.");
-        return false;
-      }
-    }
-
-    // Load Recommendations
-    async function loadRecommendations(userId) {
-      try {
-        if (recommendedDishes && personalizedRecommendations) {
-          // First check if the user has any orders
-          const ordersSnapshot = await getDocs(collection(db, "users", userId, "orders"));
-          
-          if (ordersSnapshot.empty) {
-            // No order history, hide recommendations
-            personalizedRecommendations.classList.add('hidden');
-            return;
-          }
-          
-          // Get user preferences
-          const userDoc = await getDoc(doc(db, "users", userId));
-          const preferences = userDoc.exists() ? (userDoc.data().preferences || {}) : {};
-          
-          // Get user's previously ordered items
-          let orderedItems = [];
-          ordersSnapshot.forEach(orderDoc => {
-            const orderData = orderDoc.data();
-            if (orderData.items) {
-              orderedItems = [...orderedItems, ...orderData.items];
-            }
-          });
-          
-          // Get categories of items the user likes
-          const categories = {};
-          orderedItems.forEach(item => {
-            if (item.categoryId) {
-              categories[item.categoryId] = (categories[item.categoryId] || 0) + 1;
-            }
-          });
-          
-          // Sort and get top 3 categories
-          const topCategories = Object.entries(categories)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 3)
-            .map(entry => entry[0]);
-          
-          // Get popular items in these categories
-          recommendedItems = [];
-          
-          // Query items from these categories or based on preferences
-          const menuItemsQuery = query(
-            collection(db, "menuItems"),
-            limit(8)
-          );
-          
-          const menuItemsSnapshot = await getDocs(menuItemsQuery);
-          
-          if (!menuItemsSnapshot.empty) {
-            menuItemsSnapshot.forEach(doc => {
-              // Filter for vegetarian etc. based on preferences
-              const item = {
+        if (!restaurantsSnapshot.empty) {
+          restaurantsSnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.status !== 'closed') {
+              restaurants.push({
                 id: doc.id,
-                ...doc.data()
-              };
-              
-              // Simple matching algorithm - in a real app, this would be more sophisticated
-              let match = true;
-              if (preferences.vegetarian && !item.isVegetarian) match = false;
-              if (preferences.vegan && !item.isVegan) match = false;
-              if (preferences.glutenFree && !item.isGlutenFree) match = false;
-              
-              if (match) {
-                recommendedItems.push(item);
-              }
-            });
+                ...data
+              });
+            }
+          });
+          
+          // Update restaurants UI
+          updateRestaurantsUI();
+          
+          // Load popular dishes
+          loadPopularDishes();
+        } else {
+          // Show empty state
+          if (featuredRestaurants) {
+            featuredRestaurants.innerHTML = '<p class="text-center text-gray-400 col-span-3">No restaurants available</p>';
           }
           
-          // If we have recommendations, show them
-          if (recommendedItems.length > 0) {
-            personalizedRecommendations.classList.remove('hidden');
-            updateRecommendationsUI();
-          } else {
-            personalizedRecommendations.classList.add('hidden');
+          if (restaurantsList) {
+            restaurantsList.innerHTML = '<p class="text-center text-gray-400 col-span-3">No restaurants available</p>';
           }
         }
       } catch (error) {
-        console.error("Error loading recommendations:", error);
-        personalizedRecommendations.classList.add('hidden');
-      }
-    }
-
-    // Update Recommendations UI
-    function updateRecommendationsUI() {
-      if (!recommendedDishes) return;
-      
-      if (recommendedItems.length > 0) {
-        recommendedDishes.innerHTML = '';
+        console.error("Error loading restaurants:", error);
         
-        recommendedItems.forEach(item => {
-          const dishCard = createFoodCard(item, true);
-          recommendedDishes.appendChild(dishCard);
-        });
-      } else {
-        recommendedDishes.innerHTML = '<p class="text-center text-gray-400 col-span-4">No recommendations available</p>';
+        // Show error state
+        if (featuredRestaurants) {
+          featuredRestaurants.innerHTML = '<p class="text-center text-gray-400 col-span-3">Failed to load restaurants</p>';
+        }
+        
+        if (restaurantsList) {
+          restaurantsList.innerHTML = '<p class="text-center text-gray-400 col-span-3">Failed to load restaurants</p>';
+        }
       }
     }
 
-    // Create Food Card
-    function createFoodCard(item, isRecommended = false) {
+    // Update Restaurants UI
+    function updateRestaurantsUI() {
+      // Update featured restaurants
+      if (featuredRestaurants) {
+        // Sort by rating and take top 3
+        const featured = [...restaurants].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 3);
+        
+        if (featured.length > 0) {
+          featuredRestaurants.innerHTML = '';
+          featured.forEach(restaurant => {
+            const restaurantCard = createRestaurantCard(restaurant);
+            featuredRestaurants.appendChild(restaurantCard);
+          });
+        } else {
+          featuredRestaurants.innerHTML = '<p class="text-center text-gray-400 col-span-3">No featured restaurants</p>';
+        }
+      }
+      
+      // Update all restaurants
+      if (restaurantsList) {
+        if (restaurants.length > 0) {
+          restaurantsList.innerHTML = '';
+          restaurants.forEach(restaurant => {
+            const restaurantCard = createRestaurantCard(restaurant);
+            restaurantsList.appendChild(restaurantCard);
+          });
+        } else {
+          restaurantsList.innerHTML = '<p class="text-center text-gray-400 col-span-3">No restaurants available</p>';
+        }
+      }
+    }
+
+    // Create Restaurant Card
+    function createRestaurantCard(restaurant) {
       const card = document.createElement('div');
-      card.className = 'bg-dark-100 rounded-lg overflow-hidden shadow-lg food-card relative';
+      card.className = 'bg-dark-100 rounded-lg overflow-hidden shadow-lg restaurant-card';
       
       // Default image if none provided
-      const imageUrl = item.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1160&q=80';
-      
-      // Add badges if applicable
-      let badges = '';
-      if (isRecommended) {
-        badges += '<span class="badge badge-top">Recommended</span>';
-      }
-      if (item.isTopRated) {
-        badges += '<span class="badge badge-top">Top Rated</span>';
-      }
+      const imageUrl = restaurant.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80';
       
       card.innerHTML = `
-        ${badges}
-        <div class="h-40 cursor-pointer view-food-details" data-id="${item.id}">
-          <img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover">
+        <div class="relative h-40">
+          <img src="${imageUrl}" alt="${restaurant.name}" class="w-full h-full object-cover">
+          ${restaurant.status === 'rush' ? '<div class="absolute top-2 right-2 px-2 py-1 bg-yellow-900 text-yellow-300 rounded-full text-xs">High Demand</div>' : ''}
         </div>
         <div class="p-4">
-          <div class="flex justify-between items-start mb-1">
-            <h3 class="font-semibold truncate mr-2">${item.name}</h3>
-            ${item.rating ? `
-              <div class="stars-container">
-                ${getStarRating(item.rating || 0)}
-              </div>
-            ` : ''}
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-semibold">${restaurant.name}</h3>
+            <div class="stars-container">
+              ${getStarRating(restaurant.rating || 0)}
+              <span class="text-sm text-gray-400 ml-1">${restaurant.rating || 0}</span>
+            </div>
           </div>
-          <p class="text-sm text-gray-400 mb-2">${item.restaurantName || ''}</p>
+          <p class="text-sm text-gray-400 mb-3">${restaurant.description ? restaurant.description.substring(0, 60) + (restaurant.description.length > 60 ? '...' : '') : 'No description available'}</p>
           <div class="flex justify-between items-center">
-            <p class="font-medium">₹${item.price}</p>
-            <button class="add-to-cart-food px-3 py-1 bg-primary hover:bg-blue-700 rounded-md text-sm" data-id="${item.id}">
-              Add to Cart
+            <div>
+              <span class="text-xs px-2 py-1 bg-dark-300 rounded-full">${restaurant.businessType || 'Restaurant'}</span>
+              <span class="text-xs px-2 py-1 bg-dark-300 rounded-full ml-1">30-45 min</span>
+            </div>
+            <button class="view-restaurant px-3 py-1 bg-primary hover:bg-blue-700 rounded-md text-sm" data-id="${restaurant.id}">
+              View Menu
             </button>
           </div>
         </div>
       `;
       
-      // Add event listeners
+      // Add event listener
       setTimeout(() => {
-        const detailsBtn = card.querySelector('.view-food-details');
-        const addBtn = card.querySelector('.add-to-cart-food');
-        
-        if (detailsBtn) {
-          detailsBtn.addEventListener('click', () => {
-            viewFoodDetails(item.id);
-          });
-        }
-        
-        if (addBtn) {
-          addBtn.addEventListener('click', () => {
-            addToCart(item);
-          });
-        }
+        card.querySelector('.view-restaurant').addEventListener('click', () => {
+          viewRestaurant(restaurant.id);
+        });
       }, 0);
       
       return card;
     }
 
-    // View Food Details
-    async function viewFoodDetails(foodId) {
+    // Get Star Rating HTML
+    function getStarRating(rating) {
+      let stars = '';
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.5;
+      const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+      
+      for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fas fa-star"></i>';
+      }
+      
+      if (halfStar) {
+        stars += '<i class="fas fa-star-half-alt"></i>';
+      }
+      
+      for (let i = 0; i < emptyStars; i++) {
+        stars += '<i class="far fa-star"></i>';
+      }
+      
+      return stars;
+    }
+
+    // View Restaurant
+    async function viewRestaurant(restaurantId) {
       try {
-        // Get food item data
-        const foodDoc = await getDoc(doc(db, "menuItems", foodId));
+        const restaurantDoc = await getDoc(doc(db, "restaurants", restaurantId));
         
-        if (foodDoc.exists()) {
-          currentFoodItem = {
-            id: foodDoc.id,
-            ...foodDoc.data()
+        if (restaurantDoc.exists()) {
+          currentRestaurant = {
+            id: restaurantDoc.id,
+            ...restaurantDoc.data()
           };
           
-          // Show food detail modal
-          foodDetailModal.classList.add('open');
+          // Load menu items
+          const menuItemsSnapshot = await getDocs(collection(db, "restaurants", restaurantId, "menuItems"));
           
-          // Get restaurant data
-          let restaurantName = '';
-          if (currentFoodItem.restaurantId) {
-            const restaurantDoc = await getDoc(doc(db, "restaurants", currentFoodItem.restaurantId));
-            if (restaurantDoc.exists()) {
-              restaurantName = restaurantDoc.data().name;
-              currentFoodItem.restaurantName = restaurantName;
-            }
+          const menuItems = [];
+          
+          if (!menuItemsSnapshot.empty) {
+            menuItemsSnapshot.forEach((doc) => {
+              menuItems.push({
+                id: doc.id,
+                ...doc.data(),
+                restaurantId: restaurantId,
+                restaurantName: currentRestaurant.name
+              });
+            });
           }
           
-          // Format allergens and nutritional info
-          const allergens = currentFoodItem.allergens ? currentFoodItem.allergens.join(', ') : 'None';
-          const calories = currentFoodItem.calories || 'N/A';
-          const proteins = currentFoodItem.proteins || 'N/A';
-          const carbs = currentFoodItem.carbs || 'N/A';
-          const fats = currentFoodItem.fats || 'N/A';
+          // Load categories
+          const categoriesSnapshot = await getDocs(collection(db, "restaurants", restaurantId, "categories"));
           
-          // Update modal content
-          foodDetailTitle.textContent = currentFoodItem.name;
-          foodDetailPrice.textContent = `₹${currentFoodItem.price.toFixed(2)}`;
+          const categories = [];
           
-          // Set add to cart button action
-          addToCartDetailBtn.onclick = () => {
-            addToCart(currentFoodItem);
-            foodDetailModal.classList.remove('open');
-          };
+          if (!categoriesSnapshot.empty) {
+            categoriesSnapshot.forEach((doc) => {
+              categories.push({
+                id: doc.id,
+                ...doc.data()
+              });
+            });
+          }
           
-          // Populate details
-          foodDetailContent.innerHTML = `
-            <div class="space-y-4">
-              <div class="aspect-video bg-dark-300 rounded-lg overflow-hidden">
-                <img src="${currentFoodItem.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1160&q=80'}" alt="${currentFoodItem.name}" class="w-full h-full object-cover">
+          // Update restaurant detail UI
+          updateRestaurantDetailUI(currentRestaurant, menuItems, categories);
+          
+          // Show restaurant detail section
+          showSection('restaurant-detail');
+        } else {
+          alert("Restaurant not found!");
+        }
+      } catch (error) {
+        console.error("Error loading restaurant:", error);
+        alert("Failed to load restaurant details!");
+      }
+    }
+
+    // Update Restaurant Detail UI
+    function updateRestaurantDetailUI(restaurant, menuItems, categories) {
+      if (!restaurantDetailContent) return;
+      
+      // Default image if none provided
+      const imageUrl = restaurant.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80';
+      
+      restaurantDetailContent.innerHTML = `
+        <div class="bg-dark-100 rounded-lg overflow-hidden shadow-lg mb-8">
+          <div class="relative h-64">
+            <img src="${imageUrl}" alt="${restaurant.name}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark-100 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6">
+              <h2 class="text-3xl font-bold mb-2">${restaurant.name}</h2>
+              <div class="flex items-center mb-2">
+                <div class="stars-container mr-2">
+                  ${getStarRating(restaurant.rating || 0)}
+                </div>
+                <span class="text-gray-300">${restaurant.rating || 0} (120+ ratings)</span>
+              </div>
+              <p class="text-gray-300">${restaurant.businessType || 'Restaurant'} • 30-45 min delivery</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-dark-100 rounded-lg p-6 shadow-lg mb-8">
+          <div class="flex flex-wrap gap-4 items-center">
+            <div class="flex items-center">
+              <i class="fas fa-map-marker-alt text-primary mr-2"></i>
+              <span>${restaurant.address || 'No address available'}</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-clock text-primary mr-2"></i>
+              <span>Open Now • 10:00 AM - 10:00 PM</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-phone-alt text-primary mr-2"></i>
+              <span>${restaurant.customerPhone || 'No phone available'}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2">
+            <div class="bg-dark-100 rounded-lg p-6 shadow-lg mb-8">
+              <h3 class="text-xl font-semibold mb-4">Menu</h3>
+              
+              <div class="mb-6 overflow-x-auto">
+                <div class="flex space-x-2">
+                  <button class="category-pill px-3 py-1 rounded-full bg-primary text-white" data-category="all">All</button>
+                  ${categories.map(category => `
+                    <button class="category-pill px-3 py-1 rounded-full bg-dark-300 hover:bg-dark-200" data-category="${category.id}">${category.name}</button>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <div id="menuItemsContainer" class="space-y-4">
+                ${menuItems.length > 0 ? menuItems.map(item => `
+                  <div class="menu-item p-4 border border-gray-700 rounded-lg flex flex-col sm:flex-row sm:items-center" data-category="${item.categoryId || ''}">
+                    <div class="flex-grow mb-4 sm:mb-0">
+                      <h4 class="font-medium">${item.name}</h4>
+                      <p class="text-sm text-gray-400 mb-2">${item.description || 'No description available'}</p>
+                      <p class="font-medium">₹${item.price}</p>
+                      ${item.allergens ? `<p class="text-xs text-gray-500 mt-1">Contains: ${item.allergens}</p>` : ''}
+                    </div>
+                    <div class="flex items-center">
+                      ${item.imageUrl ? `
+                        <div class="w-20 h-20 rounded-md overflow-hidden mr-4">
+                          <img src="${item.imageUrl}" alt="${item.name}" class="w-full h-full object-cover">
+                        </div>
+                      ` : ''}
+                      <button class="add-to-cart px-3 py-2 bg-primary hover:bg-blue-700 rounded-md" data-id="${item.id}">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                `).join('') : '<p class="text-center text-gray-400 py-8">No menu items available</p>'}
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="bg-dark-100 rounded-lg p-6 shadow-lg sticky top-24">
+              <h3 class="text-xl font-semibold mb-4">Restaurant Info</h3>
+              
+              <div class="mb-6">
+                <h4 class="font-medium mb-2">About</h4>
+                <p class="text-gray-400">${restaurant.description || 'No description available'}</p>
+              </div>
+              
+              <div class="mb-6">
+                <h4 class="font-medium mb-2">Opening Hours</h4>
+                <div class="space-y-1 text-gray-400">
+                  <p>Monday - Friday: 10:00 AM - 10:00 PM</p>
+                  <p>Saturday - Sunday: 9:00 AM - 11:00 PM</p>
+                </div>
               </div>
               
               <div>
-                ${restaurantName ? `<p class="text-gray-400">From ${restaurantName}</p>` : ''}
-                ${currentFoodItem.rating ? `
-                  <div class="flex items-center mt-1">
-                    <div class="stars-container mr-2">
-                      ${getStarRating(currentFoodItem.rating)}
-                    </div>
-                    <span class="text-gray-400">${currentFoodItem.rating} (${currentFoodItem.reviewCount || 0} reviews)</span>
-                  </div>
-                ` : ''}
-              </div>
-              
-              <div class="bg-dark-300 p-4 rounded-lg">
-                <h4 class="font-medium mb-2">Description</h4>
-                <p>${currentFoodItem.description || 'No description available.'}</p>
-              </div>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-dark-300 p-4 rounded-lg">
-                  <h4 class="font-medium mb-2">Allergens</h4>
-                  <p>${allergens}</p>
-                </div>
-                
-                <div class="bg-dark-300 p-4 rounded-lg">
-                  <h4 class="font-medium mb-2">Dietary Information</h4>
-                  <div class="grid grid-cols-2 gap-2">
-                    ${currentFoodItem.isVegetarian ? '<span class="text-green-500"><i class="fas fa-check-circle mr-1"></i> Vegetarian</span>' : ''}
-                    ${currentFoodItem.isVegan ? '<span class="text-green-500"><i class="fas fa-check-circle mr-1"></i> Vegan</span>' : ''}
-                    ${currentFoodItem.isGlutenFree ? '<span class="text-green-500"><i class="fas fa-check-circle mr-1"></i> Gluten-Free</span>' : ''}
-                    ${currentFoodItem.isSpicy ? '<span class="text-red-500"><i class="fas fa-pepper-hot mr-1"></i> Spicy</span>' : ''}
-                  </div>
-                </div>
-              </div>
-              
-              <div class="bg-dark-300 p-4 rounded-lg">
-                <h4 class="font-medium mb-2">Nutritional Information (per serving)</h4>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div class="text-center p-2 bg-dark-200 rounded-lg">
-                    <p class="text-sm text-gray-400">Calories</p>
-                    <p class="font-medium">${calories} kcal</p>
-                  </div>
-                  <div class="text-center p-2 bg-dark-200 rounded-lg">
-                    <p class="text-sm text-gray-400">Proteins</p>
-                    <p class="font-medium">${proteins} g</p>
-                  </div>
-                  <div class="text-center p-2 bg-dark-200 rounded-lg">
-                    <p class="text-sm text-gray-400">Carbs</p>
-                    <p class="font-medium">${carbs} g</p>
-                  </div>
-                  <div class="text-center p-2 bg-dark-200 rounded-lg">
-                    <p class="text-sm text-gray-400">Fats</p>
-                    <p class="font-medium">${fats} g</p>
-                  </div>
+                <h4 class="font-medium mb-2">Contact</h4>
+                <div class="space-y-1 text-gray-400">
+                  <p>${restaurant.customerPhone || 'No phone available'}</p>
+                  <p>${restaurant.email || 'No email available'}</p>
                 </div>
               </div>
             </div>
-          `;
-        } else {
-          alert("Food item not found!");
-        }
-      } catch (error) {
-        console.error("Error loading food details:", error);
-        alert("Failed to load food details!");
-      }
+          </div>
+        </div>
+      `;
+      
+      // Add event listeners
+      document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const itemId = btn.dataset.id;
+          const item = menuItems.find(item => item.id === itemId);
+          if (item) {
+            addToCart(item);
+          }
+        });
+      });
+      
+      // Category filter
+      document.querySelectorAll('.category-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          // Update active state
+          document.querySelectorAll('.category-pill').forEach(p => {
+            p.classList.remove('bg-primary', 'text-white');
+            p.classList.add('bg-dark-300', 'hover:bg-dark-200');
+          });
+          pill.classList.remove('bg-dark-300', 'hover:bg-dark-200');
+          pill.classList.add('bg-primary', 'text-white');
+          
+          // Filter menu items
+          const categoryId = pill.dataset.category;
+          document.querySelectorAll('.menu-item').forEach(item => {
+            if (categoryId === 'all' || item.dataset.category === categoryId) {
+              item.classList.remove('hidden');
+            } else {
+              item.classList.add('hidden');
+            }
+          });
+        });
+      });
     }
 
     // Load Popular Dishes
@@ -2831,22 +2121,22 @@
       try {
         popularItems = [];
         
-        // Get top-rated menu items from different restaurants
-        const menuItemsSnapshot = await getDocs(
-          query(collection(db, "menuItems"), orderBy("rating", "desc"), limit(8))
-        );
-        
-        if (!menuItemsSnapshot.empty) {
-          menuItemsSnapshot.forEach((doc) => {
-            const item = doc.data();
-            if (item.rating >= 4.0) { // Only show highly rated items
+        // Get random menu items from different restaurants
+        for (const restaurant of restaurants.slice(0, 3)) {
+          const menuItemsSnapshot = await getDocs(
+            query(collection(db, "restaurants", restaurant.id, "menuItems"), limit(2))
+          );
+          
+          if (!menuItemsSnapshot.empty) {
+            menuItemsSnapshot.forEach((doc) => {
               popularItems.push({
                 id: doc.id,
-                ...item,
-                isTopRated: true
+                ...doc.data(),
+                restaurantId: restaurant.id,
+                restaurantName: restaurant.name
               });
-            }
-          });
+            });
+          }
         }
         
         // Update popular dishes UI
@@ -2868,8 +2158,40 @@
       if (popularItems.length > 0) {
         popularDishes.innerHTML = '';
         popularItems.forEach(item => {
-          const dishCard = createFoodCard(item);
+          const dishCard = document.createElement('div');
+          dishCard.className = 'bg-dark-100 rounded-lg overflow-hidden shadow-lg food-card';
+          
+          // Default image if none provided
+          const imageUrl = item.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1160&q=80';
+          
+          dishCard.innerHTML = `
+            <div class="h-40">
+              <img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover">
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold mb-1">${item.name}</h3>
+              <p class="text-sm text-gray-400 mb-2">${item.restaurantName}</p>
+              <div class="flex justify-between items-center">
+                <p class="font-medium">₹${item.price}</p>
+                <button class="add-to-cart-popular px-3 py-1 bg-primary hover:bg-blue-700 rounded-md text-sm" data-id="${item.id}">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          `;
+          
           popularDishes.appendChild(dishCard);
+        });
+        
+        // Add event listeners
+        document.querySelectorAll('.add-to-cart-popular').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const itemId = btn.dataset.id;
+            const item = popularItems.find(item => item.id === itemId);
+            if (item) {
+              addToCart(item);
+            }
+          });
         });
       } else {
         popularDishes.innerHTML = '<p class="text-center text-gray-400 col-span-4">No popular dishes available</p>';
@@ -2931,7 +2253,6 @@
         await addDoc(collection(db, "restaurants", cart[0].restaurantId, "orders"), {
           orderId: orderRef.id,
           userId: currentUser.uid,
-          userEmail: currentUser.email,
           items: cart,
           subtotal,
           tax,
@@ -2962,63 +2283,6 @@
         console.error("Error placing order:", error);
         alert("Failed to place order. Please try again!");
       }
-    }
-
-    // Initialize Rating Stars
-    function initStarRating() {
-      document.querySelectorAll('.star-rating').forEach(container => {
-        const stars = container.querySelectorAll('i');
-        const ratingValueInput = document.getElementById(`${container.id}Value`) || document.getElementById('ratingValue');
-        
-        stars.forEach(star => {
-          // Handle click
-          star.addEventListener('click', () => {
-            const rating = parseInt(star.dataset.rating);
-            ratingValueInput.value = rating;
-            
-            // Update active state
-            stars.forEach(s => {
-              s.classList.remove('fas', 'active');
-              s.classList.add('far');
-            });
-            
-            for (let i = 0; i < stars.length; i++) {
-              if (i < rating) {
-                stars[i].classList.remove('far');
-                stars[i].classList.add('fas', 'active');
-              }
-            }
-            
-            // Update rating text if it exists
-            if (ratingText && container.id === '') {
-              const ratingLabels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
-              ratingText.textContent = ratingLabels[rating] || 'Select Rating';
-            }
-          });
-        });
-      });
-    }
-
-    // Get Star Rating HTML
-    function getStarRating(rating) {
-      let stars = '';
-      const fullStars = Math.floor(rating);
-      const halfStar = rating % 1 >= 0.5;
-      const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-      
-      for (let i = 0; i < fullStars; i++) {
-        stars += '<i class="fas fa-star"></i>';
-      }
-      
-      if (halfStar) {
-        stars += '<i class="fas fa-star-half-alt"></i>';
-      }
-      
-      for (let i = 0; i < emptyStars; i++) {
-        stars += '<i class="far fa-star"></i>';
-      }
-      
-      return stars;
     }
 
     // Event Listeners
@@ -3167,26 +2431,11 @@
         
         const name = document.getElementById('profileName').value;
         const phone = document.getElementById('profilePhone').value;
-        const dob = document.getElementById('profileDOB').value;
-        const bio = document.getElementById('profileBio').value;
-        
-        // Get food preferences
-        const preferences = {
-          vegetarian: document.getElementById('prefVegetarian').checked,
-          vegan: document.getElementById('prefVegan').checked,
-          glutenFree: document.getElementById('prefGlutenFree').checked,
-          spicy: document.getElementById('prefSpicy').checked,
-          healthy: document.getElementById('prefHealthy').checked,
-          desserts: document.getElementById('prefDesserts').checked
-        };
         
         try {
           await updateDoc(doc(db, "users", currentUser.uid), {
             name: name,
             phone: phone,
-            dob: dob,
-            bio: bio,
-            preferences: preferences,
             updatedAt: Timestamp.now()
           });
           
@@ -3196,9 +2445,6 @@
           document.querySelectorAll('.user-name').forEach(el => {
             el.textContent = name;
           });
-          
-          // Refresh recommendations based on new preferences
-          loadRecommendations(currentUser.uid);
         } catch (error) {
           console.error("Error updating profile:", error);
           alert("Failed to update profile: " + error.message);
@@ -3315,78 +2561,8 @@
       });
     }
 
-    // Food Detail Modal
-    if (closeFoodDetailBtn) {
-      closeFoodDetailBtn.addEventListener('click', () => {
-        foodDetailModal.classList.remove('open');
-      });
-    }
-
-    // Order Details Modal
-    if (closeOrderDetailsBtn) {
-      closeOrderDetailsBtn.addEventListener('click', () => {
-        orderDetailsModal.classList.remove('open');
-      });
-    }
-
-    if (closeOrderDetailBtn) {
-      closeOrderDetailBtn.addEventListener('click', () => {
-        orderDetailsModal.classList.remove('open');
-      });
-    }
-
-    // Rating Modal
-    if (closeRatingBtn) {
-      closeRatingBtn.addEventListener('click', () => {
-        rateRestaurantModal.classList.remove('open');
-      });
-    }
-
-    if (cancelRatingBtn) {
-      cancelRatingBtn.addEventListener('click', () => {
-        rateRestaurantModal.classList.remove('open');
-      });
-    }
-
-    // Submit Rating
-    if (ratingForm) {
-      ratingForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        if (!currentOrderForRating) {
-          alert("Error: No order selected for rating.");
-          return;
-        }
-        
-        const rating = parseInt(document.getElementById('ratingValue').value);
-        const foodRating = parseInt(document.getElementById('foodRatingValue').value);
-        const deliveryRating = parseInt(document.getElementById('deliveryRatingValue').value);
-        const comment = document.getElementById('reviewComment').value;
-        
-        if (rating === 0 || foodRating === 0 || deliveryRating === 0) {
-          alert("Please provide ratings for all categories.");
-          return;
-        }
-        
-        const reviewData = {
-          orderId: currentOrderForRating.id,
-          restaurantId: currentOrderForRating.restaurantId,
-          restaurantName: currentOrderForRating.restaurantName,
-          rating: rating,
-          foodRating: foodRating,
-          deliveryRating: deliveryRating,
-          comment: comment
-        };
-        
-        await addReview(reviewData);
-      });
-    }
-
     // Initialize the app
     document.addEventListener('DOMContentLoaded', () => {
-      // Initialize star rating functionality
-      initStarRating();
-      
       // Check if user is already logged in
       onAuthStateChanged(auth, (user) => {
         // Auth state change listener will handle the rest
@@ -3395,53 +2571,6 @@
       // Load restaurants
       loadRestaurants();
     });
-
-    // Load Restaurants
-    async function loadRestaurants() {
-      try {
-        const restaurantsSnapshot = await getDocs(collection(db, "restaurants"));
-        
-        restaurants = [];
-        
-        if (!restaurantsSnapshot.empty) {
-          restaurantsSnapshot.forEach((doc) => {
-            const data = doc.data();
-            if (data.status !== 'closed') {
-              restaurants.push({
-                id: doc.id,
-                ...data
-              });
-            }
-          });
-          
-          // Update restaurants UI
-          updateRestaurantsUI();
-          
-          // Load popular dishes
-          loadPopularDishes();
-        } else {
-          // Show empty state
-          if (featuredRestaurants) {
-            featuredRestaurants.innerHTML = '<p class="text-center text-gray-400 col-span-3">No restaurants available</p>';
-          }
-          
-          if (restaurantsList) {
-            restaurantsList.innerHTML = '<p class="text-center text-gray-400 col-span-3">No restaurants available</p>';
-          }
-        }
-      } catch (error) {
-        console.error("Error loading restaurants:", error);
-        
-        // Show error state
-        if (featuredRestaurants) {
-          featuredRestaurants.innerHTML = '<p class="text-center text-gray-400 col-span-3">Failed to load restaurants</p>';
-        }
-        
-        if (restaurantsList) {
-          restaurantsList.innerHTML = '<p class="text-center text-gray-400 col-span-3">Failed to load restaurants</p>';
-        }
-      }
-    }
   </script>
 </body>
 </html>
